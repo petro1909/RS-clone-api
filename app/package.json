@@ -1,0 +1,27 @@
+{
+  "name": "rs-clone-api",
+  "version": "1.0.0",
+  "description": "rest api for rs-clone app",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "node ./src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petro1909/RS-clone-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/petro1909/RS-clone-api/issues"
+  },
+  "homepage": "https://github.com/petro1909/RS-clone-api#readme",
+  "dependencies": {
+    "@types/node": "^18.11.18",
+    "express": "^4.18.2",
+    "pg": "^8.9.0",
+    "sequelize": "^6.28.0",
+    "typescript": "^4.9.5"
+  }
+}
