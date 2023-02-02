@@ -6,7 +6,8 @@ import returnTask from "./dbTask.js";
 import returnUser from "./dbUser.js";
 
 export const sequelize = new Sequelize("rs-clone-db", "postgres", "1234", {
-  dialect: "postgres"
+  dialect: "postgres",
+  logging: false
 });
 export const db = {};
 db.Sequelize = Sequelize;
