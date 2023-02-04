@@ -26,8 +26,10 @@ export default class BoardService {
     let createdBoard;
     try {
       createdBoard = await db.board.create(board);
-      const boardUser = { boardId: createdBoard.id, userId: userId, role: "ADMIN" };
-      await db.boardUser.create(boardUser);
+      if(userId) {
+        const boardUser = { boardId: createdBoard.id, userId: userId, role: "ADMIN" };
+        await db.boardUser.create(boardUser);
+      }
     } catch(err) {
       throw new Error(err);
     }
@@ -52,13 +54,6 @@ export default class BoardService {
       throw new Error(err);
     }
     return isDeleted;
-    // const boardStatuses = await db.status.findAll({ where: { boardId: boardId } });
-    // boardStatuses.forEach(async (boardStatus)=> {
-    //   await db.task.destroy({ where: { statusId: boardStatus.id } });
-    //   await db.status.destroy({ where: { boardId: boardId }});
-    // });
-    // await db.boardUser.destroy({where: {boardId: boardId}});
-    // await db.board.destroy({where: {id: boardId}});
   }
 
 }

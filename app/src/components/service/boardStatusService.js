@@ -2,30 +2,54 @@ import { db } from "../model/db";
 import TaskService from "./taskService";
 
 export default class BoardStatusService {
-  constructor() {
-    this.taskService = new TaskService();
-  }
-  async getAllBoardStatuses(searchOptions) {
+
+  async getStatuses(filterOptions, sortParamsArray, pageParams) {
     let statuses;
-    if(!searchOptions) {
-      statuses = await db.status.findAll();
-    } else {
-      statuses = await db.status.findAll({where: searchOptions});
+    try {
+      statuses = await db.status.findAll({ where: filterOptions, order: sortParamsArray,  offset: pageParams.offset, limit: pageParams.limit});
+    } catch(err) {
+      throw new Error(err);
     }
     return statuses;
   }
+
   async getStatusById(statusId) {
-    const findedStatus = await db.status.findByPk(statusId);
-    return findedStatus;
+    let status;
+    try {
+      status = await db.status.findByPk(statusId);
+    } catch(err) {
+      throw new Error(err);
+    }
+    return status;
   }
+
   async createStatus(status) {
-    const createdStatus = await db.status.create(status);
+    let createdStatus;
+    try {
+      createdStatus = await db.status.create(status);
+    } catch(err) {
+      throw new Error(err);
+    }
     return createdStatus;
   }
+
   async updateStatus(statusId, status) {
-    await db.status.update(status, { where: { id: statusId } });
+    let updatedStatus;
+    try {
+      updatedStatus = await db.status.update(status, { where: { id: statusId } });
+    } catch(err) {
+      throw new Error(err);
+    }
+    return updatedStatus;
   }
+
   async deleteStatus(statusId) {
-    await db.status.destroy({ where: { id: statusId } });
+    let isDeleted;
+    try {
+      isDeleted = await db.status.destroy({where: {id: statusId}}); 
+    } catch(err) {
+      throw new Error(err);
+    }
+    return isDeleted;
   }
 }

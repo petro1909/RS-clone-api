@@ -11,6 +11,7 @@ export default class TaskService {
       }
       return tasks;
   }
+
   async getTaskById(taskId) {
     let task;
     try {
@@ -20,6 +21,7 @@ export default class TaskService {
     }
     return task;
   }
+
   async createTask(task) {
     let createdTask;
     try {
@@ -29,9 +31,17 @@ export default class TaskService {
     }
     return createdTask;
   }
+
   async updateTask(taskId, task) {
-    await db.task.update(task, { where: { id: taskId } });
+    let updatedTask;
+    try {
+      updatedTask = await db.task.update(task, { where: { id: taskId } });
+    } catch(err) {
+      throw new Error(err);
+    }
+    return updatedTask;
   }
+
   async deleteTask(taskId) {
     let result;
     try {
