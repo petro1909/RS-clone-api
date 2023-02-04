@@ -3,11 +3,14 @@ import cors from "cors";
 import express from 'express';
 import { userRouter } from "./components/router/userRouter.js";
 import { userBoardRouter } from "./components/router/userBoardRouter.js";
+import { boardUserRouter } from "./components/router/boardUserRouter.js";
 
 export const app = express();
 app.use(cors());
 app.use('/users', userRouter);
 app.use('/userBoards', userBoardRouter);
+app.use('/boardUsers', boardUserRouter);
+
 try {
   await db.sequelize.sync({force: true});
 } catch(err) {
