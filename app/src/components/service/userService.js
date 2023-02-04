@@ -23,6 +23,7 @@ export default class UserService {
       }
       return user;
     }
+
     async getUserByLoginAndPassword(login, password) {
       let user;
       try {
@@ -40,6 +41,7 @@ export default class UserService {
       }
       return user;
     }
+
     async createUser(name, email, password, role = "USER") {
         const user = { name: name, email: email, password: password, role: role };
         user.password = await hashPassword(user.password);
