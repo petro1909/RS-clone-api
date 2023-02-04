@@ -1,4 +1,3 @@
-import { fileURLToPath } from "url";
 import { getFilterParams, getPageParams, getSortParamsArray } from "../util/queryParamsParser.js";
 import UserService from "../service/userService.js";
 export default class UserController {
@@ -70,14 +69,14 @@ export default class UserController {
     }
     res.status(200).json(findedUser);
   }
-  
+
   async createUser(req, res) {
     const name = req.body.name;
+    const email = req.body.email;
     if(!email) {
       res.status(400).send("email can not be empty");
       return;
     }
-    const email = req.body.email;
     const password = req.body.password;
     if(!password) {
       res.status(400).send("password can not be empty");
