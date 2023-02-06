@@ -1,12 +1,16 @@
 import { db } from "../model/db";
 
 export default class BoardService {
-
   async getBoards(filterOptions, sortParamsArray, pageParams) {
     let boards;
     try {
-      boards = await db.board.findAll({ where: filterOptions, order: sortParamsArray,  offset: pageParams.offset, limit: pageParams.limit});
-    } catch(err) {
+      boards = await db.board.findAll({
+        where: filterOptions,
+        order: sortParamsArray,
+        offset: pageParams.offset,
+        limit: pageParams.limit,
+      });
+    } catch (err) {
       throw new Error(err);
     }
     return boards;
@@ -16,7 +20,7 @@ export default class BoardService {
     let board;
     try {
       board = await db.board.findByPk(boardId);
-    } catch(err) {
+    } catch (err) {
       throw new Error(err);
     }
     return board;
@@ -26,11 +30,15 @@ export default class BoardService {
     let createdBoard;
     try {
       createdBoard = await db.board.create(board);
-      if(userId) {
-        const boardUser = { boardId: createdBoard.id, userId: userId, role: "ADMIN" };
+      if (userId) {
+        const boardUser = {
+          boardId: createdBoard.id,
+          userId: userId,
+          role: "ADMIN",
+        };
         await db.boardUser.create(boardUser);
       }
-    } catch(err) {
+    } catch (err) {
       throw new Error(err);
     }
     return createdBoard;
@@ -40,7 +48,7 @@ export default class BoardService {
     let updatedBoard;
     try {
       updatedBoard = await db.board.update(board, { where: { id: boardId } });
-    } catch(err) {
+    } catch (err) {
       throw new Error(err);
     }
     return updatedBoard;
@@ -49,11 +57,10 @@ export default class BoardService {
   async deleteBoard(boardId) {
     let isDeleted;
     try {
-      isDeleted = await db.board.destroy({where: {id: boardId}}); 
-    } catch(err) {
+      isDeleted = await db.board.destroy({ where: { id: boardId } });
+    } catch (err) {
       throw new Error(err);
     }
     return isDeleted;
   }
-
 }
