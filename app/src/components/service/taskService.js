@@ -1,4 +1,4 @@
-import { db } from "../model/db";
+import { db } from "../model/db.js";
 
 export default class TaskService {
     async getTasks(filterOptions, sortParamsArray, pageParams) {

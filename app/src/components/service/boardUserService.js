@@ -1,4 +1,4 @@
-import { db } from "../model/db";
+import { db } from "../model/db.js";
 
 export default class BoardUserService {
     async getBoardUsers(filterOptions, sortParamsArray, pageParams) {
@@ -48,7 +48,7 @@ export default class BoardUserService {
         return updatedBoardUser;
     }
 
-    async deleteBoard(boardUserId) {
+    async deleteBoardUser(boardUserId) {
         let isDeleted;
         try {
             isDeleted = await db.boardUser.destroy({ where: { id: boardUserId } });

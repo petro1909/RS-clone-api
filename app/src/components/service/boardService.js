@@ -1,4 +1,4 @@
-import { db } from "../model/db";
+import { db } from "../model/db.js";
 
 export default class BoardService {
     async getBoards(filterOptions, sortParamsArray, pageParams) {
