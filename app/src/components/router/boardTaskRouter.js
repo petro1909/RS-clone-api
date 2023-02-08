@@ -1,26 +1,31 @@
-import express from 'express';
-import TaskController from '../controller/taskController.js';
+import express from "express";
+import TaskController from "../controller/boardTaskController.js";
 
-export const taskRouter = express.Router();
+export const boardTaskRouter = express.Router();
 const parser = express.json();
 const taksController = new TaskController();
 
-taskRouter.get("/", async (req, res) => {
-  await taksController.getTasks(req, res);
-})
+boardTaskRouter.get("/", async (req, res) => {
+    // get tasks of one board status
+    await taksController.getTasks(req, res);
+});
 
-taskRouter.get("/:id", async (req, res) => {
-  await taksController.getTaskById(req, res);
-})
+boardTaskRouter.get("/:id", async (req, res) => {
+    // get one task by id
+    await taksController.getTaskById(req, res);
+});
 
-taskRouter.post("/", parser, async (req, res) => {
-  await taksController.createTask(req, res);
-})
+boardTaskRouter.post("/", parser, async (req, res) => {
+    // create new task
+    await taksController.createTask(req, res);
+});
 
-taskRouter.put("/", parser, async (req, res) => {
-  await taksController.updateTask(req, res);
-})
+boardTaskRouter.put("/", parser, async (req, res) => {
+    // edit one task
+    await taksController.updateTask(req, res);
+});
 
-taskRouter.delete("/", async (req, res) => {
-  await taksController.deleteTask(req, res);
-})
+boardTaskRouter.delete("/", async (req, res) => {
+    // delete one task
+    await taksController.deleteTask(req, res);
+});
