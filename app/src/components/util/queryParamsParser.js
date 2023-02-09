@@ -1,11 +1,17 @@
 export function getFilterParams(queryParams) {
     const filterParams = Object.assign({}, queryParams);
+    delete filterParams.q;
     delete filterParams.sort;
     delete filterParams.order;
     delete filterParams.page;
     delete filterParams.limit;
     return filterParams;
 }
+
+export function getSearchParams(queryParams) {
+    return queryParams.search;
+}
+
 export function getPageParams(queryParams) {
     const pageParams = {};
     if (Number.parseInt(queryParams.page) && Number.parseInt(queryParams.limit)) {
