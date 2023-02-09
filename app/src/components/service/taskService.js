@@ -1,7 +1,7 @@
 import { db } from "../model/db.js";
 
 export default class TaskService {
-    async getTasks(filterOptions, sortParamsArray, pageParams) {
+    async getTasks(filterOptions = {}, sortParamsArray = [], pageParams = {}) {
         let tasks;
         try {
             tasks = await db.task.findAll({
@@ -37,12 +37,13 @@ export default class TaskService {
     }
 
     async updateTask(taskId, task) {
-        let updatedTask;
+        let updatedTaskResult;
         try {
-            updatedTask = await db.task.update(task, { where: { id: taskId } });
+            updatedTaskResult = await db.task.update(task, { where: { id: taskId }, returning: true, plain: true });
         } catch (err) {
             throw new Error(err);
         }
+        const updatedTask = updatedTaskResult[1].dataValues;
         return updatedTask;
     }
 

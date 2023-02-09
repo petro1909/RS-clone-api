@@ -1,7 +1,7 @@
 import { db } from "../model/db.js";
 
 export default class BoardStatusService {
-    async getStatuses(filterOptions, sortParamsArray, pageParams) {
+    async getStatuses(filterOptions = {}, sortParamsArray = [], pageParams = {}) {
         let statuses;
         try {
             statuses = await db.status.findAll({
@@ -37,14 +37,17 @@ export default class BoardStatusService {
     }
 
     async updateStatus(statusId, status) {
-        let updatedStatus;
+        let updatedStatusResult;
         try {
-            updatedStatus = await db.status.update(status, {
+            updatedStatusResult = await db.status.update(status, {
                 where: { id: statusId },
+                returning: true,
+                plain: true,
             });
         } catch (err) {
             throw new Error(err);
         }
+        const updatedStatus = updatedStatusResult[1].dataValues;
         return updatedStatus;
     }
 

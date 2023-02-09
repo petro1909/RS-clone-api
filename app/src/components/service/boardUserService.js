@@ -1,7 +1,7 @@
 import { db } from "../model/db.js";
 
 export default class BoardUserService {
-    async getBoardUsers(filterOptions, sortParamsArray, pageParams) {
+    async getBoardUsers(filterOptions = {}, sortParamsArray = [], pageParams = {}) {
         let boardUsers;
         try {
             boardUsers = await db.boardUser.findAll({
@@ -37,14 +37,17 @@ export default class BoardUserService {
     }
 
     async updateBoardUser(boardUserId, boardUser) {
-        let updatedBoardUser;
+        let updatedBoardUserResult;
         try {
-            updatedBoardUser = await db.boardUser.update(boardUser, {
+            updatedBoardUserResult = await db.boardUser.update(boardUser, {
                 where: { id: boardUserId },
+                returning: true,
+                plain: true,
             });
         } catch (err) {
             throw new Error(err);
         }
+        const updatedBoardUser = updatedBoardUserResult[1].dataValues;
         return updatedBoardUser;
     }
 

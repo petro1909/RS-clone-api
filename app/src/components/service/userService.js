@@ -1,4 +1,4 @@
-import { UniqueConstraintError } from "sequelize";
+import { UniqueConstraintError, Op } from "sequelize";
 import { db } from "../model/db.js";
 import { comparePassword, hashPassword } from "../util/passwordHasher.js";
 
@@ -13,6 +13,33 @@ export default class UserService {
                 limit: pageParams.limit,
             });
         } catch (err) {
+            console.log(err);
+            throw new Error(err);
+        }
+        return users;
+    }
+
+    async getUsersByNameOrLogin(nameOrLogin) {
+        let users;
+        try {
+            users = await db.user.findAll({
+                where: {
+                    [Op.or]: [
+                        {
+                            name: {
+                                [Op.like]: `%${nameOrLogin}%`,
+                            },
+                        },
+                        {
+                            email: {
+                                [Op.like]: `%${nameOrLogin}%`,
+                            },
+                        },
+                    ],
+                },
+            });
+        } catch (err) {
+            console.log(err);
             throw new Error(err);
         }
         return users;
@@ -35,7 +62,7 @@ export default class UserService {
             if (!findedUser) {
                 return null;
             }
-            const isPasswordCorrect = comparePassword(password, user.password);
+            const isPasswordCorrect = await comparePassword(password, findedUser.password);
             if (!isPasswordCorrect) {
                 return null;
             }
@@ -59,17 +86,23 @@ export default class UserService {
                 throw new Error(err);
             }
         }
+        console.log(createdUser);
         return createdUser;
     }
 
     async updateUser(userId, user) {
         user.password = await hashPassword(user.password);
-        let updatedUser;
+        let updatedUserResult;
         try {
-            updatedUser = await db.user.update(user, { where: { id: userId } });
+            updatedUserResult = await db.user.update(user, { where: { id: userId }, returning: true, plain: true });
         } catch (err) {
+            console.log(err);
             throw new Error(err);
         }
+        if (!updatedUserResult) {
+            return null;
+        }
+        const updatedUser = updatedUserResult[1].dataValues;
         return updatedUser;
     }
 

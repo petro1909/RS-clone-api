@@ -1,14 +1,29 @@
 import { db } from "../model/db.js";
 
 export default class BoardService {
-    async getBoards(filterOptions, sortParamsArray, pageParams) {
+    async getBoards(filterOptions = {}, sortParamsArray = [], pageParams = {}) {
         let boards;
         try {
             boards = await db.board.findAll({ where: filterOptions, order: sortParamsArray, offset: pageParams.offset, limit: pageParams.limit });
         } catch (err) {
+            console.log(err);
             throw new Error(err);
         }
         return boards;
+    }
+
+    async getUserBoards(userId) {
+        let userBoardsPromises = [];
+        let userBoards = [];
+        try {
+            const boardUsers = await db.boardUser.findAll({ where: { userId: userId } });
+            userBoardsPromises = boardUsers.map((boardUser) => db.board.findByPk(boardUser.boardId));
+            userBoards = await Promise.all(userBoardsPromises);
+        } catch (err) {
+            console.log(err);
+            throw new Error(err);
+        }
+        return userBoards;
     }
 
     async getBoardById(boardId) {
@@ -34,18 +49,20 @@ export default class BoardService {
                 await db.boardUser.create(boardUser);
             }
         } catch (err) {
+            console.log(err);
             throw new Error(err);
         }
         return createdBoard;
     }
 
     async updateBoard(boardId, board) {
-        let updatedBoard;
+        let updatedBoardResult;
         try {
-            updatedBoard = await db.board.update(board, { where: { id: boardId } });
+            updatedBoardResult = await db.board.update(board, { where: { id: boardId }, returning: true, plain: true });
         } catch (err) {
             throw new Error(err);
         }
+        const updatedBoard = updatedBoardResult[1].dataValues;
         return updatedBoard;
     }
 
