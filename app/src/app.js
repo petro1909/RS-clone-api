@@ -12,10 +12,10 @@ export const app = express();
 app.use(cors());
 app.use("/administration", adminRouter);
 app.use("/users", userRouter);
-app.use("/userBoards", userBoardRouter);
+app.use("/boards", userBoardRouter);
 app.use("/boardUsers", boardUserRouter);
-app.use("/boardStatus", boardStatusRouter);
-app.use("/boardTasks", boardTaskRouter);
+app.use("/statuses", boardStatusRouter);
+app.use("/tasks", boardTaskRouter);
 
 try {
     await db.sequelize.sync({ force: true });
