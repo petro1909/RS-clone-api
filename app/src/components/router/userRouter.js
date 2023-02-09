@@ -12,7 +12,7 @@ userRouter.post("/login", parser, async (req, res) => {
 
 userRouter.post("/register", parser, async (req, res) => {
     // sign up user
-    await userController.createUser(req, res);
+    await userController.registerUser(req, res);
 });
 
 userRouter.get("/", async (req, res) => {

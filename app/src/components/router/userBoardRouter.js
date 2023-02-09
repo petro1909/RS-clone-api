@@ -25,7 +25,7 @@ userBoardRouter.put("/", parser, async (req, res) => {
     await boardController.updateUserBoard(req, res);
 });
 
-userBoardRouter.delete("/", async (req, res) => {
+userBoardRouter.delete("/:id", async (req, res) => {
     // delete user board
     await boardController.deleteUserBoard(req, res);
 });

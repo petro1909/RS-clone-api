@@ -25,7 +25,7 @@ boardStatusRouter.put("/", parser, async (req, res) => {
     await boardStatusController.updateBoardStatus(req, res);
 });
 
-boardStatusRouter.delete("/", async (req, res) => {
+boardStatusRouter.delete("/:id", async (req, res) => {
     // delete board status
     await boardStatusController.deleteBoardStatus(req, res);
 });
