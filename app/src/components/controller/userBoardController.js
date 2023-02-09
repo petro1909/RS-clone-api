@@ -1,5 +1,4 @@
 import BoardService from "../service/boardService.js";
-import { getSortParamsArray } from "../util/queryParamsParser.js";
 
 export default class BoardController {
     userBoardService;
@@ -9,11 +8,10 @@ export default class BoardController {
 
     async getUserBoards(req, res) {
         const queryParams = req.query;
-        const filterParams = { userId: queryParams.userId };
-        const sortParamsArray = getSortParamsArray(queryParams);
+        const userId = queryParams.userId;
         let userBoards;
         try {
-            userBoards = await this.userBoardService.getBoards(filterParams, sortParamsArray);
+            userBoards = await this.userBoardService.getUserBoards(userId);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -51,7 +49,8 @@ export default class BoardController {
 
         let createdUserBoard;
         try {
-            createdUserBoard = await this.userBoardService.createBoard(name, userId);
+            const board = { name: name };
+            createdUserBoard = await this.userBoardService.createBoard(board, userId);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -85,7 +84,7 @@ export default class BoardController {
     }
 
     async deleteUserBoard(req, res) {
-        const id = req.params.boardId;
+        const id = req.params.id;
         if (!id) {
             res.status(404).send("id does't sent");
             return;

@@ -9,7 +9,7 @@ export default class boardStatusController {
 
     async getBoardStatuses(req, res) {
         const queryParams = req.query;
-        const filterParams = { userId: queryParams.boardId };
+        const filterParams = { boardId: queryParams.boardId };
         const sortParamsArray = getSortParamsArray(queryParams);
         let boardStatuses;
         try {
@@ -33,7 +33,7 @@ export default class boardStatusController {
         }
         let findedBoardStatus;
         try {
-            findedBoardStatus = await this.boardStatusService.getBoardStatusById(boardStatusId);
+            findedBoardStatus = await this.boardStatusService.getStatusById(boardStatusId);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -49,7 +49,7 @@ export default class boardStatusController {
         const boardStatus = { name: req.body.name, boardId: req.body.boardId };
         let createdboardStatus;
         try {
-            createdboardStatus = await this.boardStatusService.createBoardStatus(boardStatus);
+            createdboardStatus = await this.boardStatusService.createStatus(boardStatus);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -83,7 +83,7 @@ export default class boardStatusController {
     }
 
     async deleteBoardStatus(req, res) {
-        const id = req.params.boardStatusId;
+        const id = req.params.id;
         if (!id) {
             res.status(404).send("id does't sent");
             return;

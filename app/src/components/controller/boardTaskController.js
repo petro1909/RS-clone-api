@@ -13,7 +13,7 @@ export default class TaskController {
         const sortParamsArray = getSortParamsArray(queryParams);
         let userBoards;
         try {
-            userBoards = await this.userBoardService.getBoards(filterParams, sortParamsArray);
+            userBoards = await this.taskService.getTasks(filterParams, sortParamsArray);
         } catch (err) {
             res.status(500).send("Database error");
             return;

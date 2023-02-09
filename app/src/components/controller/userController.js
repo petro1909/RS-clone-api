@@ -1,4 +1,4 @@
-import { getFilterParams, getPageParams, getSortParamsArray } from "../util/queryParamsParser.js";
+import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } from "../util/queryParamsParser.js";
 import UserService from "../service/userService.js";
 export default class UserController {
     userService;
@@ -8,12 +8,17 @@ export default class UserController {
 
     async getUsers(req, res) {
         const queryParams = req.query;
-        const filterParams = getFilterParams(queryParams);
-        const sortParamsArray = getSortParamsArray(queryParams);
-        const pageParams = getPageParams(queryParams);
+        const nameOrLogin = getSearchParams(queryParams);
         let users;
         try {
-            users = await this.userService.getUsers(filterParams, sortParamsArray, pageParams);
+            if (nameOrLogin) {
+                users = await this.userService.getUsersByNameOrLogin(nameOrLogin);
+            } else {
+                const filterParams = getFilterParams(queryParams);
+                const sortParams = getSortParamsArray(queryParams);
+                const pageParams = getPageParams(queryParams);
+                users = await this.userService.getUsers(filterParams, sortParams, pageParams);
+            }
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -70,7 +75,7 @@ export default class UserController {
         res.status(200).json(findedUser);
     }
 
-    async createUser(req, res) {
+    async registerUser(req, res) {
         const name = req.body.name;
         const email = req.body.email;
         if (!email) {
@@ -111,6 +116,7 @@ export default class UserController {
         try {
             updatedUser = await this.userService.updateUser(userId, user);
         } catch (err) {
+            console.log(err);
             res.status(500).send("Database error");
             return;
         }

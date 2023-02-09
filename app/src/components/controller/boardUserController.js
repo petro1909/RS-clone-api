@@ -9,7 +9,7 @@ export default class boardUserController {
 
     async getBoardUsers(req, res) {
         const queryParams = req.query;
-        const filterParams = { userId: queryParams.boardId };
+        const filterParams = { boardId: queryParams.boardId };
         const sortParamsArray = getSortParamsArray(queryParams);
         let boardUsers;
         try {
@@ -42,7 +42,7 @@ export default class boardUserController {
             res.status(404).send(`board user with id ${boardUserId} doesn't exist`);
             return;
         }
-        res.status(200).json(boardUserId);
+        res.status(200).json(findedBoardUser);
     }
 
     async createBoardUser(req, res) {
@@ -70,7 +70,7 @@ export default class boardUserController {
         const boardUser = { boardId: req.body.boardId, userId: req.body.userId, role: req.body.role };
         let updatedboardUser;
         try {
-            updatedboardUser = await this.taskService.updateTask(boardUserId, boardUser);
+            updatedboardUser = await this.boardUserService.updateBoardUser(boardUserId, boardUser);
         } catch (err) {
             res.status(500).send("Database error");
             return;
