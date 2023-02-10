@@ -3,6 +3,7 @@ import UserController from "../controller/userController.js";
 
 export const userRouter = express.Router();
 const parser = express.json();
+
 const userController = new UserController();
 
 userRouter.post("/login", parser, async (req, res) => {
@@ -28,4 +29,16 @@ userRouter.get("/:id", async (req, res) => {
 userRouter.put("/", parser, async (req, res) => {
     // edit user
     await userController.updateUser(req, res);
+});
+
+userRouter.get("/:id/profilePicture", async (req, res) => {
+    await userController.getUserProfilePicture(req, res);
+});
+
+userRouter.post("/:id/profilePicture", async (req, res) => {
+    await userController.uploadUserProfilePicture(req, res);
+});
+
+userRouter.delete("/:id/profilePicture", async (req, res) => {
+    await userController.deleteUserProfilePicture(req, res);
 });
