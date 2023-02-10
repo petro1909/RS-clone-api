@@ -1,3 +1,4 @@
+import path from "path";
 import { db } from "./components/model/db.js";
 import cors from "cors";
 import express from "express";
@@ -7,9 +8,13 @@ import { boardUserRouter } from "./components/router/boardUserRouter.js";
 import { adminRouter } from "./components/router/adminRouter.js";
 import { boardStatusRouter } from "./components/router/boardStatusRouter.js";
 import { boardTaskRouter } from "./components/router/boardTaskRouter.js";
+import fileUpload from "express-fileupload";
 
+export const staticFilesFolder = path.resolve(process.cwd(), "./src/static");
 export const app = express();
 app.use(cors());
+app.use(fileUpload());
+app.use(express.static(staticFilesFolder));
 app.use("/administration", adminRouter);
 app.use("/users", userRouter);
 app.use("/boards", userBoardRouter);
@@ -18,7 +23,7 @@ app.use("/statuses", boardStatusRouter);
 app.use("/tasks", boardTaskRouter);
 
 try {
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ force: false });
 } catch (err) {
     console.error(err.name);
 }
