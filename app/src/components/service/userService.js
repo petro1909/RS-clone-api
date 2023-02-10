@@ -1,6 +1,7 @@
 import { UniqueConstraintError, Op } from "sequelize";
 import { db } from "../model/db.js";
 import { comparePassword, hashPassword } from "../util/passwordHasher.js";
+import { staticFilesFolder } from "../../app.js";
 
 export default class UserService {
     async getUsers(filterOptions, sortParamsArray, pageParams) {
@@ -91,7 +92,9 @@ export default class UserService {
     }
 
     async updateUser(userId, user) {
-        user.password = await hashPassword(user.password);
+        if (user.password) {
+            user.password = await hashPassword(user.password);
+        }
         let updatedUserResult;
         try {
             updatedUserResult = await db.user.update(user, { where: { id: userId }, returning: true, plain: true });
@@ -114,5 +117,9 @@ export default class UserService {
             throw new Error(err);
         }
         return isDeleted;
+    }
+
+    getUserFolder(userId) {
+        return `${staticFilesFolder}/users/${userId}`;
     }
 }
