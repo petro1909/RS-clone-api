@@ -1,5 +1,8 @@
 import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } from "../util/queryParamsParser.js";
 import UserService from "../service/userService.js";
+
+import { createFile, deleteFile, getStaticFile } from "../service/fileService.js";
+
 export default class UserController {
     userService;
     constructor() {
@@ -145,5 +148,76 @@ export default class UserController {
             return;
         }
         res.status(200).send("user deleted");
+    }
+
+    async getUserProfilePicture(req, res) {
+        const userId = req.params.id;
+        let findedUser;
+        try {
+            findedUser = await this.userService.getUser(userId);
+        } catch (err) {
+            return res.status(500).send("Database error");
+        }
+        const profilePictureName = findedUser.profilePicture;
+        if (!profilePictureName) {
+            return res.status(404).send("File not found");
+        }
+        const userFolder = this.userService.getUserFolder(userId);
+        const userPicture = await getStaticFile(userFolder, profilePictureName);
+        if (userPicture) {
+            return res.send(`/users/${userId}/${profilePictureName}`);
+        } else {
+            return res.status(404).send("Can't access file");
+        }
+    }
+
+    async uploadUserProfilePicture(req, res) {
+        const id = req.params.id;
+        let findedUser;
+        try {
+            findedUser = await this.userService.getUser(id);
+        } catch (err) {
+            return res.status(500).send("Database error");
+        }
+        if (!findedUser) {
+            return res.status(404).send(`user with id ${id} doesn't exist`);
+        }
+        if (!req.files) {
+            return res.status(400).send("No files were uploaded.");
+        }
+        const picture = req.files.profile;
+        let userFolder = this.userService.getUserFolder(id);
+
+        const isCreated = createFile(userFolder, picture, true);
+        if (isCreated) {
+            const upatedUser = { profilePicture: picture.name };
+            await this.userService.updateUser(id, upatedUser);
+            res.status(200).send("File uploaded!");
+        } else {
+            return res.status(500).send("Cant upload file");
+        }
+    }
+
+    async deleteUserProfilePicture(req, res) {
+        const userId = req.params.id;
+        const user = { profilePicture: null };
+        let profilePictureName;
+        try {
+            const findedUser = await this.userService.getUser(userId);
+            if (!findedUser) {
+                return res.status(404).send(`user with id ${req.body.id} doesn't exist`);
+            }
+            profilePictureName = findedUser.profilePicture;
+            await this.userService.updateUser(userId, user);
+        } catch (err) {
+            return res.status(500).send("Database error");
+        }
+        const userFolder = this.userService.getUserFolder(userId);
+        const isDeleted = await deleteFile(userFolder, profilePictureName);
+        if (isDeleted) {
+            res.status(200).send("picture deleted");
+        } else {
+            return res.status(404).send("can't delete picture");
+        }
     }
 }
