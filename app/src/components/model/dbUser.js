@@ -24,6 +24,10 @@ function returnUser(sequelize, DataTypes) {
             values: ["ADMIN", "USER"],
             allowNull: true,
         },
+        profilePicture: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
     return User;
 }
