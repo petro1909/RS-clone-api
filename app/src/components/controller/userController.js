@@ -2,7 +2,7 @@ import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } f
 import UserService from "../service/userService.js";
 
 import { createFile, deleteFile, getStaticFile } from "../service/fileService.js";
-import { generateToken } from "../service/authService.js";
+import { generateToken } from "../middleware/authService.js";
 
 export default class UserController {
     userService;
