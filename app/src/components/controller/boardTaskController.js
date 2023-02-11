@@ -83,7 +83,7 @@ export default class TaskController {
     }
 
     async deleteTask(req, res) {
-        const id = req.params.taskdId;
+        const id = req.params.id;
         if (!id) {
             res.status(404).send("id does't sent");
             return;

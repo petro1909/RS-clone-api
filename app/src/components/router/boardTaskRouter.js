@@ -25,7 +25,7 @@ boardTaskRouter.put("/", parser, async (req, res) => {
     await taksController.updateTask(req, res);
 });
 
-boardTaskRouter.delete("/", async (req, res) => {
+boardTaskRouter.delete("/:id", async (req, res) => {
     // delete one task
     await taksController.deleteTask(req, res);
 });
