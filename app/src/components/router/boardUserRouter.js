@@ -1,6 +1,6 @@
 import express from "express";
 import BoardUserController from "../controller/boardUserController.js";
-import { verifyUser } from "../service/authService.js";
+import { verifyUser } from "../middleware/authService.js";
 
 export const boardUserRouter = express.Router();
 const parser = express.json();

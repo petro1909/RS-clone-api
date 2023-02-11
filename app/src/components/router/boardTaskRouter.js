@@ -1,6 +1,6 @@
 import express from "express";
 import TaskController from "../controller/boardTaskController.js";
-import { verifyUser } from "../service/authService.js";
+import { verifyUser } from "../middleware/authService.js";
 
 export const boardTaskRouter = express.Router();
 const parser = express.json();

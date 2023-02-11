@@ -1,6 +1,6 @@
 import express from "express";
 import UserController from "../controller/userController.js";
-import { verifyUser } from "../service/authService.js";
+import { verifyUser } from "../middleware/authService.js";
 
 export const userRouter = express.Router();
 const parser = express.json();

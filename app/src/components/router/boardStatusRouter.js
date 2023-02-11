@@ -4,7 +4,7 @@ import BoardStatusController from "../controller/boardStatusController.js";
 export const boardStatusRouter = express.Router();
 const parser = express.json();
 const boardStatusController = new BoardStatusController();
-import { verifyUser } from "../service/authService.js";
+import { verifyUser } from "../middleware/authService.js";
 
 boardStatusRouter.get("/", async (req, res) => {
     // get statuses of one user board
