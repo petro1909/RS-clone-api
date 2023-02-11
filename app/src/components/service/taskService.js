@@ -31,6 +31,7 @@ export default class TaskService {
         try {
             createdTask = await db.task.create(task);
         } catch (err) {
+            console.log(err);
             throw new Error(err);
         }
         return createdTask;
@@ -52,7 +53,7 @@ export default class TaskService {
         try {
             result = await db.task.destroy({ where: { id: taskId } });
         } catch (err) {
-            throw new Error();
+            throw new Error(err);
         }
         return result;
     }
