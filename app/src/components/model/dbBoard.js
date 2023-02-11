@@ -10,6 +10,10 @@ function returnBoard(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     });
     return board;
 }
