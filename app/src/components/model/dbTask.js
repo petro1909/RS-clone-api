@@ -6,9 +6,29 @@ function returnTask(sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true,
         },
-        text: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        markId: {
+            type: DataTypes.UUID,
+            allowNull: true,
+        },
+        done: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+        },
+        startDate: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        endDate: {
+            type: DataTypes.DATE,
+            allowNull: true,
         },
     });
     return task;
