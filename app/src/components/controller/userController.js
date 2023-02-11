@@ -2,6 +2,7 @@ import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } f
 import UserService from "../service/userService.js";
 
 import { createFile, deleteFile, getStaticFile } from "../service/fileService.js";
+import { generateToken } from "../service/authService.js";
 
 export default class UserController {
     userService;
@@ -75,7 +76,8 @@ export default class UserController {
             res.status(404).send(`login or password not correct`);
             return;
         }
-        res.status(200).json(findedUser);
+        const token = generateToken(findedUser);
+        res.status(200).json({ findedUser, token });
     }
 
     async registerUser(req, res) {
@@ -147,7 +149,7 @@ export default class UserController {
             res.status(404).send(`user with id ${id} doesn't exist`);
             return;
         }
-        res.status(200).send("user deleted");
+        res.status(204).send("user deleted");
     }
 
     async getUserProfilePicture(req, res) {
@@ -215,7 +217,7 @@ export default class UserController {
         const userFolder = this.userService.getUserFolder(userId);
         const isDeleted = await deleteFile(userFolder, profilePictureName);
         if (isDeleted) {
-            res.status(200).send("picture deleted");
+            res.status(204).send("picture deleted");
         } else {
             return res.status(404).send("can't delete picture");
         }

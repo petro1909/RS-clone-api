@@ -99,6 +99,6 @@ export default class boardStatusController {
             res.status(404).send(`board status with id ${id} doesn't exist`);
             return;
         }
-        res.status(200).send("board status deleted");
+        res.status(204).send("board status deleted");
     }
 }

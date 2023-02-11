@@ -83,7 +83,7 @@ export default class boardUserController {
     }
 
     async deleteBoardUser(req, res) {
-        const id = req.params.boardUserId;
+        const id = req.params.id;
         if (!id) {
             res.status(404).send("id does't sent");
             return;
@@ -99,6 +99,6 @@ export default class boardUserController {
             res.status(404).send(`board user with id ${id} doesn't exist`);
             return;
         }
-        res.status(200).send("board user deleted");
+        res.status(204).send("board user deleted");
     }
 }

@@ -7,8 +7,7 @@ export default class BoardController {
     }
 
     async getUserBoards(req, res) {
-        const queryParams = req.query;
-        const userId = queryParams.userId;
+        const userId = req.user.id;
         let userBoards;
         try {
             userBoards = await this.userBoardService.getUserBoards(userId);
@@ -45,7 +44,7 @@ export default class BoardController {
 
     async createUserBoard(req, res) {
         const name = req.body.name;
-        const userId = req.body.userId;
+        const userId = req.user.id;
 
         let createdUserBoard;
         try {
@@ -100,6 +99,6 @@ export default class BoardController {
             res.status(404).send(`board with id ${id} doesn't exist`);
             return;
         }
-        res.status(200).send("user board deleted");
+        res.status(204).send("user board deleted");
     }
 }

@@ -46,7 +46,7 @@ export default class TaskController {
     }
 
     async createTask(req, res) {
-        const task = { text: req.body.text, statusId: req.body.statusId };
+        const task = { name: req.body.name, description: req.body.description, statusId: req.body.statusId };
         let createdTask;
         try {
             createdTask = await this.taskService.createTask(task);
@@ -83,7 +83,7 @@ export default class TaskController {
     }
 
     async deleteTask(req, res) {
-        const id = req.params.taskdId;
+        const id = req.params.id;
         if (!id) {
             res.status(404).send("id does't sent");
             return;
@@ -99,6 +99,6 @@ export default class TaskController {
             res.status(404).send(`task with id ${id} doesn't exist`);
             return;
         }
-        res.status(200).send("task deleted");
+        res.status(204).send("task deleted");
     }
 }
