@@ -165,7 +165,7 @@ export default class UserController {
         const userFolder = this.userService.getUserFolder(userId);
         const userPicture = await getStaticFile(userFolder, profilePictureName);
         if (userPicture) {
-            return res.send(`/users/${userId}/${profilePictureName}`);
+            return res.send({ url: `/users/${userId}/${profilePictureName}` });
         } else {
             return res.status(404).send("Can't access file");
         }
@@ -192,7 +192,8 @@ export default class UserController {
         if (isCreated) {
             const upatedUser = { profilePicture: picture.name };
             await this.userService.updateUser(id, upatedUser);
-            res.status(200).send("File uploaded!");
+            res.status(200).send({ message: "File uploaded!" });
+            // res.status(200).send("File uploaded!");
         } else {
             return res.status(500).send("Cant upload file");
         }
@@ -214,8 +215,9 @@ export default class UserController {
         }
         const userFolder = this.userService.getUserFolder(userId);
         const isDeleted = await deleteFile(userFolder, profilePictureName);
+        console.log("isDeleted", isDeleted);
         if (isDeleted) {
-            res.status(200).send("picture deleted");
+            res.status(204).send({ message: "picture deleted" });
         } else {
             return res.status(404).send("can't delete picture");
         }
