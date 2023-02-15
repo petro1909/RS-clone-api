@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import UserService from "../service/userService.js";
+import UserRepository from "../repository/userRepository.js";
 
 export function generateToken(user) {
     const data = { id: user.id, role: user.role };
@@ -13,10 +13,10 @@ export async function verifyUser(req, res, next) {
         return res.status(401).send("No authorization token provided");
     }
     const parsedUserToken = verifyToken(authToken);
-    const userService = new UserService();
-    const findedUser = await userService.getUser(parsedUserToken.id);
+    const userRepository = new UserRepository();
+    const findedUser = await userRepository.getUser(parsedUserToken.id);
     if (!findedUser) {
-        return res.status(401).send("User not found");
+        return res.status(401).send("authorization user not found");
     }
     req.user = findedUser;
     return next();
