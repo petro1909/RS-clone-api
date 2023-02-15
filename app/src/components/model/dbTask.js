@@ -14,6 +14,10 @@ function returnTask(sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: true,
         },
+        order: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         markId: {
             type: DataTypes.UUID,
             allowNull: true,
