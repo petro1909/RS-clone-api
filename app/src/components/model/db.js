@@ -5,6 +5,7 @@ import returnBoardUser from "./dbBoardUser.js";
 import returnStatus from "./dbStatus.js";
 import returnTask from "./dbTask.js";
 import returnTaskAttachment from "./dbTaskAttachment.js";
+import returnTaskMark from "./dbTaskMark.js";
 import returnTaskUser from "./dbTaskUser.js";
 import returnUser from "./dbUser.js";
 
@@ -49,3 +50,8 @@ db.taskUser = returnTaskUser(sequelize, DataTypes);
 
 db.task.belongsToMany(db.boardUser, { through: db.taskUser, onDelete: "CASCADE", onUpdate: "CASCADE" });
 db.boardUser.belongsToMany(db.task, { through: db.taskUser, onDelete: "CASCADE", onUpdate: "CASCADE" });
+
+db.taskMark = returnTaskMark(sequelize, DataTypes);
+
+db.task.belongsToMany(db.boardMark, { through: db.taskMark, onDelete: "CASCADE", onUpdate: "CASCADE" });
+db.boardMark.belongsToMany(db.task, { through: db.taskMark, onDelete: "CASCADE", onUpdate: "CASCADE" });
