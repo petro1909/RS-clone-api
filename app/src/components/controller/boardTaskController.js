@@ -1,10 +1,10 @@
-import TaskService from "../service/taskService.js";
-import { getSortParamsArray } from "../util/queryParamsParser.js";
+import TaskRepository from "../repository/taskRepository.js";
+import { getSortParamsArray } from "../service/queryParamsParser.js";
 
 export default class TaskController {
-    taskService;
+    taskRepository;
     constructor() {
-        this.taskService = new TaskService();
+        this.taskRepository = new TaskRepository();
     }
 
     async getTasks(req, res) {
@@ -13,7 +13,7 @@ export default class TaskController {
         const sortParamsArray = getSortParamsArray(queryParams);
         let userBoards;
         try {
-            userBoards = await this.taskService.getTasks(filterParams, sortParamsArray);
+            userBoards = await this.taskRepository.getTasks(filterParams, sortParamsArray);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -33,7 +33,7 @@ export default class TaskController {
         }
         let findedTask;
         try {
-            findedTask = await this.taskService.getTaskById(id);
+            findedTask = await this.taskRepository.getTaskById(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -46,10 +46,10 @@ export default class TaskController {
     }
 
     async createTask(req, res) {
-        const task = { name: req.body.name, description: req.body.description, statusId: req.body.statusId };
+        const task = req.body;
         let createdTask;
         try {
-            createdTask = await this.taskService.createTask(task);
+            createdTask = await this.taskRepository.createTask(task);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -67,10 +67,10 @@ export default class TaskController {
             res.status(404).send("task id does't sent");
             return;
         }
-        const task = { text: req.body.text, statusId: req.body.statusId };
+        const task = req.body;
         let updatedTask;
         try {
-            updatedTask = await this.taskService.updateTask(taskId, task);
+            updatedTask = await this.taskRepository.updateTask(task);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -90,7 +90,7 @@ export default class TaskController {
         }
         let isDeleted;
         try {
-            isDeleted = await this.taskService.deleteTask(id);
+            isDeleted = await this.taskRepository.deleteTask(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;

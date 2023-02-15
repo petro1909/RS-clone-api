@@ -1,13 +1,14 @@
-import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } from "../util/queryParamsParser.js";
-import UserService from "../service/userService.js";
+import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } from "../service/queryParamsParser.js";
+import UserRepository from "../repository/userRepository.js";
 
 import { createFile, deleteFile, getStaticFile } from "../service/fileService.js";
 import { generateToken } from "../middleware/authService.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
 
 export default class UserController {
-    userService;
+    userRepository;
     constructor() {
-        this.userService = new UserService();
+        this.userRepository = new UserRepository();
     }
 
     async getUsers(req, res) {
@@ -16,12 +17,12 @@ export default class UserController {
         let users;
         try {
             if (nameOrLogin) {
-                users = await this.userService.getUsersByNameOrLogin(nameOrLogin);
+                users = await this.userRepository.getUsersByNameOrLogin(nameOrLogin);
             } else {
                 const filterParams = getFilterParams(queryParams);
                 const sortParams = getSortParamsArray(queryParams);
                 const pageParams = getPageParams(queryParams);
-                users = await this.userService.getUsers(filterParams, sortParams, pageParams);
+                users = await this.userRepository.getUsers(filterParams, sortParams, pageParams);
             }
         } catch (err) {
             res.status(500).send("Database error");
@@ -42,13 +43,13 @@ export default class UserController {
         }
         let findedUser;
         try {
-            findedUser = await this.userService.getUser(id);
+            findedUser = await this.userRepository.getUser(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;
         }
         if (!findedUser) {
-            res.status(404).send(`user with id ${id} doesn't exist`);
+            res.status(404).send(`such user doesn't exist`);
             return;
         }
         res.status(200).json(findedUser);
@@ -67,7 +68,7 @@ export default class UserController {
         }
         let findedUser;
         try {
-            findedUser = await this.userService.getUserByLoginAndPassword(email, password);
+            findedUser = await this.userRepository.getUserByLoginAndPassword(email, password);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -92,15 +93,16 @@ export default class UserController {
             res.status(400).send("password can not be empty");
             return;
         }
+        const user = { name: name, email: email, password: password, role: "USER" };
         let createdUser;
         try {
-            createdUser = await this.userService.createUser(name, email, password);
+            createdUser = await this.userRepository.createUser(user);
         } catch (err) {
             res.status(500).send("Database error");
             return;
         }
         if (!createdUser) {
-            res.status(400).send(`user with email ${email} already exist`);
+            res.status(400).send(`user with such email already exist`);
             return;
         }
         res.status(201).json(createdUser);
@@ -112,21 +114,17 @@ export default class UserController {
             res.status(404).send("id does't sent");
             return;
         }
-        const user = {
-            name: req.body.name,
-            email: req.body.email,
-            password: req.body.password,
-        };
+        const user = req.body;
         let updatedUser;
         try {
-            updatedUser = await this.userService.updateUser(userId, user);
+            updatedUser = await this.userRepository.updateUser(user);
         } catch (err) {
             console.log(err);
             res.status(500).send("Database error");
             return;
         }
         if (!updatedUser) {
-            res.status(404).send(`user with id ${req.body.id} doesn't exist`);
+            res.status(404).send(`such user doesn't exist`);
             return;
         }
         res.status(200).json(updatedUser);
@@ -140,7 +138,7 @@ export default class UserController {
         }
         let isDeleted;
         try {
-            isDeleted = await this.userService.deleteUser(id);
+            isDeleted = await this.userRepository.deleteUser(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -156,18 +154,18 @@ export default class UserController {
         const userId = req.params.id;
         let findedUser;
         try {
-            findedUser = await this.userService.getUser(userId);
+            findedUser = await this.userRepository.getUser(userId);
         } catch (err) {
             return res.status(500).send("Database error");
         }
         const profilePictureName = findedUser.profilePicture;
         if (!profilePictureName) {
-            return res.status(404).send("File not found");
+            return res.status(404).send("User doesn't have profile picture");
         }
-        const userFolder = this.userService.getUserFolder(userId);
+        const userFolder = this.userRepository.getUserFolder(userId);
         const userPicture = await getStaticFile(userFolder, profilePictureName);
         if (userPicture) {
-            return res.send(`/users/${userId}/${profilePictureName}`);
+            return res.json({ profilePicture: `/users/${userId}/${profilePictureName}` });
         } else {
             return res.status(404).send("Can't access file");
         }
@@ -177,7 +175,7 @@ export default class UserController {
         const id = req.params.id;
         let findedUser;
         try {
-            findedUser = await this.userService.getUser(id);
+            findedUser = await this.userRepository.getUser(id);
         } catch (err) {
             return res.status(500).send("Database error");
         }
@@ -188,15 +186,15 @@ export default class UserController {
             return res.status(400).send("No files were uploaded.");
         }
         const picture = req.files.profile;
-        let userFolder = this.userService.getUserFolder(id);
+        let userFolder = this.userRepository.getUserFolder(id);
 
         const isCreated = createFile(userFolder, picture, true);
         if (isCreated) {
             const upatedUser = { profilePicture: picture.name };
-            await this.userService.updateUser(id, upatedUser);
-            res.status(200).send("File uploaded!");
+            await this.userRepository.updateUser(id, upatedUser);
+            return res.json({ profilePicture: `/users/${findedUser.id}/${picture.name}` });
         } else {
-            return res.status(500).send("Cant upload file");
+            return res.status(500).send("Can't upload file");
         }
     }
 
@@ -205,21 +203,21 @@ export default class UserController {
         const user = { profilePicture: null };
         let profilePictureName;
         try {
-            const findedUser = await this.userService.getUser(userId);
+            const findedUser = await this.userRepository.getUser(userId);
             if (!findedUser) {
-                return res.status(404).send(`user with id ${req.body.id} doesn't exist`);
+                return sendJsonHttpResponse(res, 404, "user not found");
             }
             profilePictureName = findedUser.profilePicture;
-            await this.userService.updateUser(userId, user);
+            await this.userRepository.updateUser(userId, user);
         } catch (err) {
-            return res.status(500).send("Database error");
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
-        const userFolder = this.userService.getUserFolder(userId);
+        const userFolder = this.userRepository.getUserFolder(userId);
         const isDeleted = await deleteFile(userFolder, profilePictureName);
         if (isDeleted) {
-            res.status(204).send("picture deleted");
+            return sendJsonHttpResponse(res, 204, "picture deleted");
         } else {
-            return res.status(404).send("can't delete picture");
+            return sendJsonHttpResponse(res, 404, "can't delete picture");
         }
     }
 }

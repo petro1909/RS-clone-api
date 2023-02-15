@@ -1,16 +1,16 @@
-import BoardService from "../service/boardService.js";
+import BoardRepository from "../repository/boardRepository.js";
 
 export default class BoardController {
-    userBoardService;
+    userBoardRepository;
     constructor() {
-        this.userBoardService = new BoardService();
+        this.userBoardRepository = new BoardRepository();
     }
 
     async getUserBoards(req, res) {
         const userId = req.user.id;
         let userBoards;
         try {
-            userBoards = await this.userBoardService.getUserBoards(userId);
+            userBoards = await this.userBoardRepository.getUserBoards(userId);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -30,7 +30,7 @@ export default class BoardController {
         }
         let findedUserBoard;
         try {
-            findedUserBoard = await this.userBoardService.getBoardById(id);
+            findedUserBoard = await this.userBoardRepository.getBoardById(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -49,7 +49,7 @@ export default class BoardController {
         let createdUserBoard;
         try {
             const board = { name: name };
-            createdUserBoard = await this.userBoardService.createBoard(board, userId);
+            createdUserBoard = await this.userBoardRepository.createBoard(board, userId);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -67,10 +67,10 @@ export default class BoardController {
             res.status(404).send("id does't sent");
             return;
         }
-        const userBoard = { name: req.body.name };
+        const userBoard = req.body;
         let updatedUserBoard;
         try {
-            updatedUserBoard = await this.userBoardService.updateBoard(boardId, userBoard);
+            updatedUserBoard = await this.userBoardRepository.updateBoard(userBoard);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -90,7 +90,7 @@ export default class BoardController {
         }
         let isDeleted;
         try {
-            isDeleted = await this.userBoardService.deleteBoard(id);
+            isDeleted = await this.userBoardRepository.deleteBoard(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;

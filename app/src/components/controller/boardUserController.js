@@ -1,10 +1,10 @@
-import BoardUserService from "../service/boardUserService.js";
-import { getSortParamsArray } from "../util/queryParamsParser.js";
+import BoardUserRepository from "../repository/boardUserRepository.js";
+import { getSortParamsArray } from "../service/queryParamsParser.js";
 
 export default class boardUserController {
-    boardUserService;
+    boardUserRepository;
     constructor() {
-        this.boardUserService = new BoardUserService();
+        this.boardUserRepository = new BoardUserRepository();
     }
 
     async getBoardUsers(req, res) {
@@ -13,7 +13,7 @@ export default class boardUserController {
         const sortParamsArray = getSortParamsArray(queryParams);
         let boardUsers;
         try {
-            boardUsers = await this.boardUserService.getBoardUsers(filterParams, sortParamsArray);
+            boardUsers = await this.boardUserRepository.getBoardUsers(filterParams, sortParamsArray);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -33,7 +33,7 @@ export default class boardUserController {
         }
         let findedBoardUser;
         try {
-            findedBoardUser = await this.boardUserService.getBoardUserById(boardUserId);
+            findedBoardUser = await this.boardUserRepository.getBoardUserById(boardUserId);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -46,10 +46,10 @@ export default class boardUserController {
     }
 
     async createBoardUser(req, res) {
-        const boardUser = { boardId: req.body.boardId, userId: req.body.userId, role: req.body.role };
+        const boardUser = req.body;
         let createdBoardUser;
         try {
-            createdBoardUser = await this.boardUserService.createBoardUser(boardUser);
+            createdBoardUser = await this.boardUserRepository.createBoardUser(boardUser);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -67,10 +67,10 @@ export default class boardUserController {
             res.status(404).send("task id does't sent");
             return;
         }
-        const boardUser = { boardId: req.body.boardId, userId: req.body.userId, role: req.body.role };
+        const boardUser = req.body;
         let updatedboardUser;
         try {
-            updatedboardUser = await this.boardUserService.updateBoardUser(boardUserId, boardUser);
+            updatedboardUser = await this.boardUserRepository.updateBoardUser(boardUser);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -90,7 +90,7 @@ export default class boardUserController {
         }
         let isDeleted;
         try {
-            isDeleted = await this.boardUserService.deleteBoardUser(id);
+            isDeleted = await this.boardUserRepository.deleteBoardUser(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;

@@ -1,10 +1,10 @@
-import BoardStatusService from "../service/boardStatusService.js";
-import { getSortParamsArray } from "../util/queryParamsParser.js";
+import BoardStatusRepository from "../repository/boardStatusRepository.js";
+import { getSortParamsArray } from "../service/queryParamsParser.js";
 
 export default class boardStatusController {
-    boardStatusService;
+    boardStatusRepository;
     constructor() {
-        this.boardStatusService = new BoardStatusService();
+        this.boardStatusRepository = new BoardStatusRepository();
     }
 
     async getBoardStatuses(req, res) {
@@ -13,7 +13,7 @@ export default class boardStatusController {
         const sortParamsArray = getSortParamsArray(queryParams);
         let boardStatuses;
         try {
-            boardStatuses = await this.boardStatusService.getStatuses(filterParams, sortParamsArray);
+            boardStatuses = await this.boardStatusRepository.getStatuses(filterParams, sortParamsArray);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -33,7 +33,7 @@ export default class boardStatusController {
         }
         let findedBoardStatus;
         try {
-            findedBoardStatus = await this.boardStatusService.getStatusById(boardStatusId);
+            findedBoardStatus = await this.boardStatusRepository.getStatusById(boardStatusId);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -46,10 +46,10 @@ export default class boardStatusController {
     }
 
     async createBoardStatus(req, res) {
-        const boardStatus = { name: req.body.name, boardId: req.body.boardId };
+        const boardStatus = req.body;
         let createdboardStatus;
         try {
-            createdboardStatus = await this.boardStatusService.createStatus(boardStatus);
+            createdboardStatus = await this.boardStatusRepository.createStatus(boardStatus);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -67,10 +67,10 @@ export default class boardStatusController {
             res.status(404).send("task id does't sent");
             return;
         }
-        const boardStatus = { name: req.body.name, boardId: req.body.boardId };
+        const boardStatus = req.body;
         let updatedboardStatus;
         try {
-            updatedboardStatus = await this.boardStatusService.updateStatus(boardStatusId, boardStatus);
+            updatedboardStatus = await this.boardStatusRepository.updateStatus(boardStatus);
         } catch (err) {
             res.status(500).send("Database error");
             return;
@@ -90,7 +90,7 @@ export default class boardStatusController {
         }
         let isDeleted;
         try {
-            isDeleted = await this.boardStatusService.deleteStatus(id);
+            isDeleted = await this.boardStatusRepository.deleteStatus(id);
         } catch (err) {
             res.status(500).send("Database error");
             return;
