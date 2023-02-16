@@ -5,7 +5,8 @@ Api for Rollong Scopres School task RS-clone
 # Usage
  - **[Authorization responses](#authorization-responses)**
  - **[Database responses](#database-responses)**
-- **[Entities additional fields](#entities-additional-fields)**
+ - **[Entities additional fields](#entities-additional-fields)**
+ - **[Filer entities](#filter-entities)**
 - **Users**
   - [User entity](#user-entity)
   - [Login User](#login-user)
@@ -113,7 +114,15 @@ Besides entities own fields, each entity has two additional fields:
       },
 ```
 These fields created automatically after any entity is created. There is no need to create, update, or delete it. You can get them with any entity get request.
-
+# Filer entities
+All get requests that get a list of entities, supports several optional query parameters:
+```json
+page=[integer]
+limit=[integer]
+sort=[string] - any entity parameter
+order=["ASC","DESC"]
+```
+Sort and order parameters can by multiple but, sort always should be same count as order
 # Users
 ### User entity: 
 ```json
@@ -150,20 +159,16 @@ These fields created automatically after any entity is created. There is no need
       },
     }
 ```
-## Route = /users
-### Login user
-----
+### Route = /users
+#### Login user
 <details>
 
 * **URL** - /login
 * **Method:** - `POST`
-* **Headers:** 
-  None
-*  **URL Params:**
-  None
-* **Query Params**
-    None
-* **Data Params**
+* **Headers:** None
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params:**
 ```json
     {
       "email": {
@@ -182,8 +187,10 @@ These fields created automatically after any entity is created. There is no need
     * **Code:** 200 <br/> 
     **Content:** 
     ```json
-      { "token": "string",
-        "user": "{user instanse"}
+      { 
+        "findedUser": "{user instanse}",
+        "token": "string",
+      }
     ```
 * **Error Responses:**
   * **Code:** 400 <br/> 
@@ -203,8 +210,8 @@ These fields created automatically after any entity is created. There is no need
     ```
 </details>
 
-### Register user
-----
+#### Register user
+
 <details>
 
 * **URL** - /register
@@ -236,37 +243,67 @@ These fields created automatically after any entity is created. There is no need
     }
 ```
 * **Success Response:**
-  * **Code:** 200 <br/> 
+  * **Code:** 200 
   **Content:** 
-    ```json
-      { "user": "{user instanse}"}
-    ```
+    * **[user entity](#user-entity)**
 * **Error Responses:**
-  * **Code:** 400 <br/> 
+  * **Code:** 400 
   **Content:** 
     ```json
       { "message": "email can not be empty" }
     ```
-  * **Code:** 400 <br/> 
+  * **Code:** 400 
   **Content:** 
     ```json
       { "message": "password can not be empty" }
     ```
-  * **Code:** 400 <br/> 
+  * **Code:** 400
   **Content:** 
     ```json
       { "message": "user with such email already exist" }
     ```
 </details>
 
-### Get users
-### Get user by id
-----
+#### Get users
 <details>
-* **URL** - /:id
+
+* **URL** - /
 * **Method:** - `GET`
 * **Headers:** 
   authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        search[string] - search user by part of email or name 
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{user instanse}",
+        "{user instanse}",
+        "{user instanse}"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get users" }
+    ```
+</details>
+
+#### Get user by id
+
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
 *  **URL Params**
 
     **Required:**
@@ -275,33 +312,30 @@ These fields created automatically after any entity is created. There is no need
 * **Query Params** None
 * **Data Params**  None
 * **Success Response:**
-  * **Code:** 200 <br/> 
+  * **Code:** 200
   **Content:** 
-    ```json
-      { "user": "{user instanse}"}
-    ```
+    * **[user entity](#user-entity)**
 * **Error Responses:**
-  * **Code:** 400 <br/> 
+  * **Code:** 400 
   **Content:** 
     ```json
       { "message": "id didn't sent" }
     ```
-  * **Code:** 404 <br/> 
+  * **Code:** 404
   **Content:** 
     ```json
       { "message": "such user doesn't exist" }
     ```
 </details>
 
-### Edit user
-----
+#### Edit user
+
 <details>
 
-* **URL** - /:id
+* **URL** - /
 * **Method:** - `PUT`
-* **Headers:** 
-  authorization
-*  **URL Params** Node
+* **Headers:** Authorization
+*  **URL Params** None
 * **Query Params** None
 * **Data Params** 
 ```json
@@ -329,59 +363,24 @@ These fields created automatically after any entity is created. There is no need
     }
 ```
 * **Success Response:**
-  * **Code:** 200 <br/> 
+  * **Code:** 200
   **Content:** 
-    ```json
-      { "user": "{user instanse}"}
-    ```
+      * **[user entity](#user-entity)**
 * **Error Responses:**
-  * **Code:** 400 <br/> 
+  * **Code:** 400 
   **Content:** 
     ```json
       { "message": "id didn't sent" }
     ```
-  * **Code:** 404 <br/> 
+  * **Code:** 404
   **Content:** 
     ```json
       { "message": "such user doesn't exist" }
     ```
 </details>
 
-### Get user picture
-----
-<details>
-
-* **URL** - /:id/profilePicture
-* **Method:** - `GET`
-* **Headers:** 
-  authorization
-*  **URL Params**
-
-    **Required:**
- 
-    `id=[string]`
-* **Query Params** None
-* **Data Params**  None
-* **Success Response:**
-  * **Code:** 200 <br/> 
-  **Content:** 
-    ```json
-      { "profilePicture": "string"}
-    ```
-* **Error Responses:**
-  * **Code:** 400 <br/> 
-  **Content:** 
-    ```json
-      { "message": "User doesn't have profile picture" }
-    ```
-  * **Code:** 404 <br/> 
-  **Content:** 
-    ```json
-      { "message": "Can't access file" }
-    ```
-</details>
-
 # User profile picture
+### Base route = /users/:id/profilePicture
 ## User profile picture entity
 ```json
   {
@@ -392,41 +391,108 @@ These fields created automatically after any entity is created. There is no need
     },
   }
 ```
-### Create user picture
-### Delete user picture
-----
-Delete specified user picture
+#### Get user picture
 
 <details>
 
-* **URL** - /:id/profilePicture
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+
+    **Required:**
+ 
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    ```json
+      { "profilePicture": "string"}
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "User doesn't have profile picture" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "Can't access file" }
+    ```
+</details>
+
+#### Create user picture
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params**
+
+    **Required:**
+ 
+    `id=[string]`
+* **Query Params** None
+* **Data Params**
+```
+form-data - <input type="file" name="profile"/>
+```
+
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    ```json
+      { "profilePicture": "string"}
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "User doesn't have profile picture" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "Can't access file" }
+    ```
+</details>
+
+#### Delete user picture
+<details>
+
+* **URL** - /
 * **Method:** - `DELETE`
-* **Headers:** 
-  
-  **Required**
-  
-  Authorization
+* **Headers:** Authorization
 *  **URL Params**
 
     **Required:**
  
     `id=[string]`
 
-* **Query Params**
+* **Query Params** None
 
-    None
-
-* **Data Params**
-
-    None
+* **Data Params** None
 
 * **Success Response:**
-  * **Code:** 204 No content <br />
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "picture deleted" }
+    ```
 * **Error Responses:**
-
-  * **Code:** 404 user not found <br />
-  * **Code:** 500 database error <br />
-  * **Code:** 404 can't delete picture <br />
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "user not found" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "can't delete picture" }
+    ```
 </details>
 
 # Boards
