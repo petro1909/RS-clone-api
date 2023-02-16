@@ -18,10 +18,6 @@ function returnTask(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        markId: {
-            type: DataTypes.UUID,
-            allowNull: true,
-        },
         done: {
             type: DataTypes.BOOLEAN,
             allowNull: true,
