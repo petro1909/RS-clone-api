@@ -13,6 +13,8 @@ Api for Rollong Scopres School task RS-clone
   - [Get Users](#get-users)
   - [Get User by id](#get-user-by-id)
   - [Edit user](#edit-user)
+- **User Profile Picture**
+  - [User profile picture entity](#user-profile-picture-entity)
   - [Get user picture name](#get-user-picture)
   - [Create user picture](#create-user-picture)
   - [Delete user picture](#delete-user-picture)
@@ -379,6 +381,17 @@ These fields created automatically after any entity is created. There is no need
     ```
 </details>
 
+# User profile picture
+## User profile picture entity
+```json
+  {
+    "profilePicture": {
+        "type": "string",
+        "example": "picture.jpg",
+        "required": false,
+    },
+  }
+```
 ### Create user picture
 ### Delete user picture
 ----
@@ -415,5 +428,261 @@ Delete specified user picture
   * **Code:** 500 database error <br />
   * **Code:** 404 can't delete picture <br />
 </details>
+# Boards
 
+### Board entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "name": {
+        "type": "string",
+        "example": "Test board",
+        "required": false,
+      },
+      "description": {
+        "type": "string",
+        "example": "example@gmail.com",
+        "required": true,
+      }
+    }
+```
+</details>
+## Route = /boards
+
+# Board Users
+### Board user entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "userId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "boardId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+</details>
+
+## Route = /boardUsers
+
+# Board Marks
+### Board mark entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "name": {
+        "type": "string",
+        "example": "mark 1",
+        "required": false,
+      },
+      "color": {
+        "type": "string",
+        "example": "red",
+        "required": false,
+      },
+      "boardId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+</details>
+
+# Board Statuses
+### Board status entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "name": {
+        "type": "string",
+        "example": "test status",
+        "required": true,
+      },
+      "description": {
+        "type": "string",
+        "example": "status description",
+        "required": false,
+      },
+      "order": {
+        "type": "number",
+        "example": 5,
+        "required": true,
+      },
+      "boardId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+</details>
+
+# Board Tasks
+### Board task entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "name": {
+        "type": "string",
+        "example": "test status",
+        "required": true,
+      },
+      "description": {
+        "type": "string",
+        "example": "status description",
+        "required": false,
+      },
+      "order": {
+        "type": "number",
+        "example": 5,
+        "required": true,
+      },
+      "done": {
+        "type": "boolean",
+        "example": true,
+        "required": false,
+      },
+      "startDate": {
+        "type": "date",
+        "example": "2023-02-15T13:09:03.737Z",
+        "required": false,
+      },
+      "endDate": {
+        "type": "date",
+        "example": "2023-02-15T13:09:03.737Z",
+        "required": false,
+      },
+      "statusId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+</details>
+
+# Task Attachments
+### Task attachment entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "name": {
+        "type": "string",
+        "example": "test status",
+        "required": true,
+      },
+      "type": {
+        "type": "enum",
+        "values": ["FILE", "HYPERLINK"],
+        "required": true,
+      },
+      "taskId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+</details>
+
+# Task Users
+### Task user entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "taskId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "boardUsersid": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+</details>
+
+# Task Marks
+### Task mark entity:
+---
+<details> 
+
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "taskId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "boardMarkid": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+</details>
+# Administation
 
