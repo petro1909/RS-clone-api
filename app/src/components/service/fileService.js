@@ -43,7 +43,7 @@ export async function deleteFile(folderName, fileName) {
         await fs.rm(`${folderName}/${fileName}`);
         const folderFiles = await fs.readdir(folderName);
         if (folderFiles.length === 0) {
-            await fs.rm(folderName);
+            await fs.rm(folderName, { recursive: true });
         }
     } catch (err) {
         console.log(err);
