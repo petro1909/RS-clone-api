@@ -47,7 +47,7 @@ Api for Rollong Scopres School task RS-clone
   - [Edit board status]()
   - [Delete board status]()
 - **Board Tasks**
-  - [Task entity](#task-entity)
+  - [Task entity](#board-task-entity)
   - [Get tasks]()
   - [Get taks by id]()
   - [Create task]()
@@ -93,7 +93,7 @@ Api for Rollong Scopres School task RS-clone
     ```json
       { "message": "authorization user not found" }
     ```
-# Databse Responses
+# Database Responses
 Besides base route responses, all routes can send database error response 
   * **Code:** 500 <br/> 
   **Content:** 
@@ -454,6 +454,7 @@ Delete specified user picture
     }
 ```
 </details>
+
 ## Route = /boards
 
 # Board Users
@@ -684,5 +685,6 @@ Delete specified user picture
     }
 ```
 </details>
+
 # Administation
 
