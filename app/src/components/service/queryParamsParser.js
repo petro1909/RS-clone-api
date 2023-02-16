@@ -1,6 +1,6 @@
 export function getFilterParams(queryParams) {
     const filterParams = Object.assign({}, queryParams);
-    delete filterParams.q;
+    delete filterParams.search;
     delete filterParams.sort;
     delete filterParams.order;
     delete filterParams.page;
@@ -9,7 +9,10 @@ export function getFilterParams(queryParams) {
 }
 
 export function getSearchParams(queryParams) {
-    return queryParams.search;
+    if (queryParams.search) {
+        return queryParams.search;
+    }
+    return null;
 }
 
 export function getPageParams(queryParams) {
