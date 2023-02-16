@@ -29,7 +29,7 @@ app.use("/taskUsers", taskUserRouter);
 app.use("/taskMarks", taskMarkRouter);
 
 try {
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ force: false });
 } catch (err) {
     console.error(err);
 }
