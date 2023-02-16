@@ -1,6 +1,7 @@
-import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } from "../service/queryParamsParser.js";
+import { getSearchParams } from "../service/queryParamsParser.js";
 import UserRepository from "../repository/userRepository.js";
 import { generateToken } from "../middleware/authService.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
 
 export default class UserController {
     userRepository;
@@ -11,43 +12,35 @@ export default class UserController {
     async getUsers(req, res) {
         const queryParams = req.query;
         const nameOrLogin = getSearchParams(queryParams);
-        let users;
+        let users = [];
         try {
             if (nameOrLogin) {
                 users = await this.userRepository.getUsersByNameOrLogin(nameOrLogin);
             } else {
-                const filterParams = getFilterParams(queryParams);
-                const sortParams = getSortParamsArray(queryParams);
-                const pageParams = getPageParams(queryParams);
-                users = await this.userRepository.getUsers(filterParams, sortParams, pageParams);
+                users = await this.userRepository.getUsers();
             }
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!users) {
-            res.status(500).send("Server can't get users");
-            return;
+            return sendJsonHttpResponse(res, 500, "Server can't get users");
         }
-        res.status(200).json(users);
+        return res.status(200).json(users);
     }
 
     async getUserById(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(400).send("id didn't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "Id didn't sent");
         }
         let findedUser;
         try {
             findedUser = await this.userRepository.getUser(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedUser) {
-            res.status(404).send(`such user doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such user doesn't exist");
         }
         res.status(200).json(findedUser);
     }
@@ -55,24 +48,20 @@ export default class UserController {
     async loginUser(req, res) {
         const email = req.body.email;
         if (!email) {
-            res.status(400).send("email can not be empty");
-            return;
+            return sendJsonHttpResponse(res, 400, "email can not be empty");
         }
         const password = req.body.password;
         if (!password) {
-            res.status(400).send("password can not be empty");
-            return;
+            return sendJsonHttpResponse(res, 400, "password can not be empty");
         }
         let findedUser;
         try {
             findedUser = await this.userRepository.getUserByLoginAndPassword(email, password);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedUser) {
-            res.status(404).send(`login or password not correct`);
-            return;
+            return sendJsonHttpResponse(res, 404, "login or password is not correct");
         }
         const token = generateToken(findedUser);
         res.status(200).json({ findedUser, token });
@@ -82,25 +71,21 @@ export default class UserController {
         const name = req.body.name;
         const email = req.body.email;
         if (!email) {
-            res.status(400).send("email can not be empty");
-            return;
+            return sendJsonHttpResponse(res, 400, "email can not be empty");
         }
         const password = req.body.password;
         if (!password) {
-            res.status(400).send("password can not be empty");
-            return;
+            return sendJsonHttpResponse(res, 400, "password can not be empty");
         }
         const user = { name: name, email: email, password: password, role: "USER" };
         let createdUser;
         try {
             createdUser = await this.userRepository.createUser(user);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!createdUser) {
-            res.status(400).send(`user with such email already exist`);
-            return;
+            return sendJsonHttpResponse(res, 400, "user with such email already exist");
         }
         res.status(201).json(createdUser);
     }
@@ -108,21 +93,17 @@ export default class UserController {
     async updateUser(req, res) {
         const userId = req.body.id;
         if (!userId) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "Id didn't sent");
         }
         const user = req.body;
         let updatedUser;
         try {
             updatedUser = await this.userRepository.updateUser(user);
         } catch (err) {
-            console.log(err);
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!updatedUser) {
-            res.status(404).send(`such user doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such user doesn't exist");
         }
         res.status(200).json(updatedUser);
     }
@@ -130,19 +111,16 @@ export default class UserController {
     async deleteUser(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "Id didn't sent");
         }
         let isDeleted;
         try {
             isDeleted = await this.userRepository.deleteUser(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!isDeleted) {
-            res.status(404).send(`user with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such user doesn't exist");
         }
         res.status(204).send("user deleted");
     }
