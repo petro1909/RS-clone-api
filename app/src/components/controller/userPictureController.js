@@ -47,7 +47,7 @@ export default class UserPictureController {
         const picture = req.files.profile;
         let userFolder = this.userRepository.getUserFolder(id);
 
-        const isCreated = createFile(userFolder, picture, true);
+        const isCreated = await createFile(userFolder, picture, true);
         if (isCreated) {
             const upatedUser = { id: id, profilePicture: picture.name };
             try {
