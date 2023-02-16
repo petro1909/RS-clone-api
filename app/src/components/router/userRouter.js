@@ -1,11 +1,13 @@
 import express from "express";
 import UserController from "../controller/userController.js";
+import UserPictureController from "../controller/userPictureController.js";
 import { verifyUser } from "../middleware/authService.js";
 
 export const userRouter = express.Router();
 const parser = express.json();
 
 const userController = new UserController();
+const userPictureController = new UserPictureController();
 
 userRouter.post("/login", parser, async (req, res) => {
     // sign in user
@@ -33,13 +35,13 @@ userRouter.put("/", verifyUser, parser, async (req, res) => {
 });
 
 userRouter.get("/:id/profilePicture", verifyUser, async (req, res) => {
-    await userController.getUserProfilePicture(req, res);
+    await userPictureController.getUserProfilePicture(req, res);
 });
 
 userRouter.post("/:id/profilePicture", verifyUser, async (req, res) => {
-    await userController.uploadUserProfilePicture(req, res);
+    await userPictureController.uploadUserProfilePicture(req, res);
 });
 
 userRouter.delete("/:id/profilePicture", verifyUser, async (req, res) => {
-    await userController.deleteUserProfilePicture(req, res);
+    await userPictureController.deleteUserProfilePicture(req, res);
 });
