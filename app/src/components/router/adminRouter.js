@@ -1,57 +1,51 @@
 import express from "express";
 import AdminController from "../controller/adminController.js";
+import UserController from "../controller/userController.js";
+import { verifyRequiredRole, verifyUser } from "../middleware/authService.js";
 
 export const adminRouter = express.Router();
 const parser = express.json();
 const adminController = new AdminController();
+const userController = new UserController();
 
-adminRouter.post("/login", async (req, res) => {
-    // sign in admin
-    await adminController.loginUser(req, res);
-});
-adminRouter.post("/register", parser, async (req, res) => {
-    // sign up admin
-    await adminController.createUser(req, res);
-});
-
-adminRouter.get("/users", async (req, res) => {
+adminRouter.get("/users", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // get users by any params
-    await adminController.getUsers(req, res);
+    await userController.getUsers(req, res);
 });
-adminRouter.get("/users/:id", async (req, res) => {
+adminRouter.get("/users/:id", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // get users by any params
-    await adminController.getUsers(req, res);
+    await userController.getUserById(req, res);
 });
-adminRouter.post("/users", async (req, res) => {
+adminRouter.post("/users", verifyUser, verifyRequiredRole("ADMIN"), parser, async (req, res) => {
     // create user
-    await adminController.getUsers(req, res);
+    await userController.registerUser(req, res);
 });
-adminRouter.put("/users", async (req, res) => {
+adminRouter.put("/users", verifyUser, verifyRequiredRole("ADMIN"), parser, async (req, res) => {
     // update user
-    await adminController.getUsers(req, res);
+    await adminController.updateUser(req, res);
 });
-adminRouter.delete("/users/:id", async (req, res) => {
+adminRouter.delete("/users/:id", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // delete user
     await adminController.deleteUser(req, res);
 });
 
-adminRouter.get("/statistics", async (req, res) => {
+adminRouter.get("/statistics", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // get users queries statistic
     await adminController.getUsers(req, res);
 });
-adminRouter.get("/statistics/:id", async (req, res) => {
+adminRouter.get("/statistics/:id", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // get users queries statistic
     await adminController.getUsers(req, res);
 });
-adminRouter.post("/statistics", async (req, res) => {
+adminRouter.post("/statistics", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // post user statistics
     await adminController.getUsers(req, res);
 });
-adminRouter.put("/statistics", async (req, res) => {
+adminRouter.put("/statistics", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // post user statistics
     await adminController.getUsers(req, res);
 });
-adminRouter.delete("/statistics/:id", async (req, res) => {
+adminRouter.delete("/statistics/:id", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // delete user statistics
     await adminController.getUsers(req, res);
 });
