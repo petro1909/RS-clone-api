@@ -44,6 +44,9 @@ export default class DbBaseRepository {
         } catch (err) {
             throw new Error(err);
         }
+        if (!updatedEntityResult[1]) {
+            return null;
+        }
         const updatedEntity = updatedEntityResult[1].dataValues;
         return updatedEntity;
     }
