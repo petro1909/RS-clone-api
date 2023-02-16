@@ -428,6 +428,7 @@ Delete specified user picture
   * **Code:** 500 database error <br />
   * **Code:** 404 can't delete picture <br />
 </details>
+
 # Boards
 
 ### Board entity:
