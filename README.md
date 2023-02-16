@@ -7,6 +7,12 @@ Api for Rollong Scopres School task RS-clone
  - **[Database responses](#database-responses)**
  - **[Entities additional fields](#entities-additional-fields)**
  - **[Filer entities](#filter-entities)**
+ - **Administation**
+  - [Get Users](#admin-get-users)
+  - [Get User by id](#admin-get-user)
+  - [Create User](#admin-create-user)
+  - [Edit user](#admin-edit-user) 
+  - [Delete user](#admin-delete-user)
 - **Users**
   - [User entity](#user-entity)
   - [Login User](#login-user)
@@ -123,6 +129,7 @@ sort=[string] - any entity parameter
 order=["ASC","DESC"]
 ```
 Sort and order parameters can by multiple but, sort always should be same count as order
+# Administation
 # Users
 ### User entity: 
 ```json
