@@ -504,10 +504,7 @@ form-data - <input type="file" name="profile"/>
 
 # Boards
 
-### Board entity:
----
-<details> 
-
+#### Board entity:
 ```json
     {
       "id": {
@@ -518,18 +515,174 @@ form-data - <input type="file" name="profile"/>
       "name": {
         "type": "string",
         "example": "Test board",
-        "required": false,
+        "required": true,
       },
       "description": {
         "type": "string",
-        "example": "example@gmail.com",
-        "required": true,
+        "example": "board description",
+        "required": false,
       }
     }
 ```
-</details>
 
 ## Route = /boards
+#### Get user boards
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        userId
+        name
+        description
+    ```
+**Note**: If query parameter userId is not specified, server send boards of user that found in authorization token.
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ board instance }",
+        "{ board instance }",
+        "{ board instance }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get user boards" }
+    ```
+</details>
+
+#### Get board by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[board entity](#board-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such userBoard doesn't exist" }
+    ```
+</details>
+
+#### Create user board
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "name": {
+        "type": "string",
+        "example": "board name",
+        "required": true,
+      },
+      "description": {
+        "type": "string",
+        "example": "board description",
+        "required": false,
+      }
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[user entity](#user-entity)**
+
+  **Note** - This request (if succefull) also creates single board user. User id takes from authentification token
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create user board" }
+    ```
+</details>
+
+#### Edit user board
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[board entity](#board-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[board entity](#board-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such user board does't exist" }
+    ```
+</details>
+
+#### Delete user board
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "user board deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such user board does't exist" }
+    ```
+</details>
 
 # Board Users
 ### Board user entity:
