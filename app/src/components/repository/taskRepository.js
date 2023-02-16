@@ -1,4 +1,5 @@
 import DbBaseRepository from "./baseRepository.js";
+import { staticFilesFolder } from "../../app.js";
 
 export default class TaskRepository extends DbBaseRepository {
     constructor() {
@@ -23,5 +24,9 @@ export default class TaskRepository extends DbBaseRepository {
 
     async deleteTask(taskId) {
         return await super.delete(taskId);
+    }
+
+    getTaskFolder(taskId) {
+        return `${staticFilesFolder}/tasks/${taskId}`;
     }
 }
