@@ -1,4 +1,4 @@
-import { getSearchParams } from "../service/queryParamsParser.js";
+import { getPageParams, getSearchParams, getSortParamsArray } from "../service/queryParamsParser.js";
 import UserRepository from "../repository/userRepository.js";
 import { generateToken } from "../middleware/authService.js";
 import sendJsonHttpResponse from "../service/httpMessageService.js";
@@ -12,10 +12,12 @@ export default class UserController {
     async getUsers(req, res) {
         const queryParams = req.query;
         const nameOrLogin = getSearchParams(queryParams);
+        const pageParams = getPageParams(queryParams);
+        const sortParamsArray = getSortParamsArray(queryParams);
         let users = [];
         try {
             if (nameOrLogin) {
-                users = await this.userRepository.getUsersByNameOrLogin(nameOrLogin);
+                users = await this.userRepository.getUsersByNameOrLogin(nameOrLogin, pageParams, sortParamsArray);
             } else {
                 users = await this.userRepository.getUsers();
             }

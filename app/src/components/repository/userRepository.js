@@ -13,7 +13,7 @@ export default class UserRepository extends DbBaseRepository {
         return await super.getAll(filterOptions, sortParamsArray, pageParams);
     }
 
-    async getUsersByNameOrLogin(nameOrLogin) {
+    async getUsersByNameOrLogin(nameOrLogin, pageParams, sortParamsArray) {
         let users;
         try {
             users = await db.user.findAll({
@@ -31,6 +31,9 @@ export default class UserRepository extends DbBaseRepository {
                         },
                     ],
                 },
+                order: sortParamsArray,
+                offset: pageParams.offset,
+                limit: pageParams.limit,
             });
         } catch (err) {
             console.log(err);
