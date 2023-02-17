@@ -1,5 +1,6 @@
 import TaskUserRepository from "../repository/taskUserRepository.js";
 import { getSortParamsArray } from "../service/queryParamsParser.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
 
 export default class TaskUserController {
     taskUserRepository;
@@ -15,34 +16,29 @@ export default class TaskUserController {
         try {
             taskUsers = await this.taskUserRepository.getTaskUsers(filterParams, sortParamsArray);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!taskUsers) {
-            res.status(500).send("Server can't get user boards");
-            return;
+            return sendJsonHttpResponse(res, 500, "Server can't get task users");
         }
-        res.status(200).json(taskUsers);
+        return res.status(200).json(taskUsers);
     }
 
     async getTaskUserById(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(400).send("id didn't send");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         let findedTaskUser;
         try {
             findedTaskUser = await this.taskUserRepository.getTaskUserById(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedTaskUser) {
-            res.status(404).send(`taskUser with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task user doesn't exist");
         }
-        res.status(200).json(findedTaskUser);
+        return res.status(200).json(findedTaskUser);
     }
 
     async createTaskUser(req, res) {
@@ -51,54 +47,46 @@ export default class TaskUserController {
         try {
             createdTaskUser = await this.taskUserRepository.createTaskUser(taskUser);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!createdTaskUser) {
-            res.status(400).send(`can't create taskUser`);
-            return;
+            return sendJsonHttpResponse(res, 400, "can't create task user");
         }
-        res.status(201).json(createdTaskUser);
+        return res.status(201).json(createdTaskUser);
     }
 
     async updateTaskUser(req, res) {
         const taskUserId = req.body.id;
         if (!taskUserId) {
-            res.status(404).send("taskUser id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         const taskUser = req.body;
         let updatedTaskUser;
         try {
             updatedTaskUser = await this.taskUserRepository.updateTaskUser(taskUser);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!updatedTaskUser) {
-            res.status(404).send(`taskUser with id ${taskUserId} does't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task user doesn't exist");
         }
-        res.status(200).json(updatedTaskUser);
+        return res.status(200).json(updatedTaskUser);
     }
 
     async deleteTaskUser(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         let isDeleted;
         try {
             isDeleted = await this.taskUserRepository.deleteTaskUser(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!isDeleted) {
-            res.status(404).send(`taskUser with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task user doesn't exist");
         }
-        res.status(204).send("taskUser deleted");
+        return sendJsonHttpResponse(res, 204, "task user deleted");
     }
 }

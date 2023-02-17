@@ -1,4 +1,6 @@
 import BoardRepository from "../repository/boardRepository.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
+import { getFilterParams, getPageParams, getSortParamsArray } from "../service/queryParamsParser.js";
 
 export default class BoardController {
     userBoardRepository;
@@ -7,98 +9,91 @@ export default class BoardController {
     }
 
     async getUserBoards(req, res) {
+        const queryParams = req.query;
         const userId = req.user.id;
+        if (!queryParams.userId) {
+            queryParams.userId = userId;
+        }
+        const filterParams = getFilterParams(queryParams);
+        const pageParams = getPageParams(queryParams);
+        const sortParamsArray = getSortParamsArray(queryParams);
         let userBoards;
         try {
-            userBoards = await this.userBoardRepository.getUserBoards(userId);
+            userBoards = await this.userBoardRepository.getUserBoards(filterParams, sortParamsArray, pageParams);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!userBoards) {
-            res.status(500).send("Server can't get user boards");
-            return;
+            return sendJsonHttpResponse(res, 500, "Server can't get user boards");
         }
-        res.status(200).json(userBoards);
+        return res.status(200).json(userBoards);
     }
 
     async getUserBoardById(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(400).send("id didn't send");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         let findedUserBoard;
         try {
             findedUserBoard = await this.userBoardRepository.getBoardById(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedUserBoard) {
-            res.status(404).send(`userBoard with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such userBoard doesn't exist");
         }
-        res.status(200).json(findedUserBoard);
+        return res.status(200).json(findedUserBoard);
     }
 
     async createUserBoard(req, res) {
-        const name = req.body.name;
+        const board = req.body;
         const userId = req.user.id;
 
         let createdUserBoard;
         try {
-            const board = { name: name };
             createdUserBoard = await this.userBoardRepository.createBoard(board, userId);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!createdUserBoard) {
-            res.status(400).send(`can't create user board`);
-            return;
+            return sendJsonHttpResponse(res, 400, "can't create user board");
         }
-        res.status(201).json(createdUserBoard);
+        return res.status(201).json(createdUserBoard);
     }
 
     async updateUserBoard(req, res) {
         const boardId = req.body.id;
         if (!boardId) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         const userBoard = req.body;
         let updatedUserBoard;
         try {
             updatedUserBoard = await this.userBoardRepository.updateBoard(userBoard);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!updatedUserBoard) {
-            res.status(404).send(`user board with id ${boardId} does't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such user board doesn't exist");
         }
-        res.status(200).json(updatedUserBoard);
+        return res.status(200).json(updatedUserBoard);
     }
 
     async deleteUserBoard(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         let isDeleted;
         try {
             isDeleted = await this.userBoardRepository.deleteBoard(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!isDeleted) {
-            res.status(404).send(`board with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such user board doesn't exist");
         }
-        res.status(204).send("user board deleted");
+        return sendJsonHttpResponse(res, 204, "user board deleted");
     }
 }

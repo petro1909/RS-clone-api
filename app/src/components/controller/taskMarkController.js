@@ -1,5 +1,6 @@
 import TaskMarkRepository from "../repository/taskMarkRepository.js";
 import { getSortParamsArray } from "../service/queryParamsParser.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
 
 export default class TaskMarkController {
     taskMarkRepository;
@@ -15,34 +16,29 @@ export default class TaskMarkController {
         try {
             taskMarks = await this.taskMarkRepository.getTaskMarks(filterParams, sortParamsArray);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!taskMarks) {
-            res.status(500).send("Server can't get user boards");
-            return;
+            return sendJsonHttpResponse(res, 500, "Server can't get task marks");
         }
-        res.status(200).json(taskMarks);
+        return res.status(200).json(taskMarks);
     }
 
     async getTaskMarkById(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(400).send("id didn't send");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         let findedTaskMark;
         try {
             findedTaskMark = await this.taskMarkRepository.getTaskMarkById(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedTaskMark) {
-            res.status(404).send(`taskMark with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task mark doesn't exist");
         }
-        res.status(200).json(findedTaskMark);
+        return res.status(200).json(findedTaskMark);
     }
 
     async createTaskMark(req, res) {
@@ -51,54 +47,46 @@ export default class TaskMarkController {
         try {
             createdTaskMark = await this.taskMarkRepository.createTaskMark(taskMark);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!createdTaskMark) {
-            res.status(400).send(`can't create taskMark`);
-            return;
+            return sendJsonHttpResponse(res, 400, "can't create task mark");
         }
-        res.status(201).json(createdTaskMark);
+        return res.status(201).json(createdTaskMark);
     }
 
     async updateTaskMark(req, res) {
         const taskMarkId = req.body.id;
         if (!taskMarkId) {
-            res.status(404).send("taskMark id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         const taskMark = req.body;
         let updatedTaskMark;
         try {
             updatedTaskMark = await this.taskMarkRepository.updateTaskMark(taskMark);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!updatedTaskMark) {
-            res.status(404).send(`taskMark with id ${taskMarkId} does't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task mark doesn't exist");
         }
-        res.status(200).json(updatedTaskMark);
+        return res.status(200).json(updatedTaskMark);
     }
 
     async deleteTaskMark(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't send");
         }
         let isDeleted;
         try {
             isDeleted = await this.taskMarkRepository.deleteTaskMark(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!isDeleted) {
-            res.status(404).send(`taskMark with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task mark doesn't exist");
         }
-        res.status(204).send("taskMark deleted");
+        return sendJsonHttpResponse(res, 204, "task mark deleted");
     }
 }
