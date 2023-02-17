@@ -11,11 +11,11 @@ export default class BoardRepository extends DbBaseRepository {
         return await super.getAll(filterOptions, sortParamsArray, pageParams);
     }
 
-    async getUserBoards(userId) {
+    async getUserBoards(filterParams = {}, sortParamsArray = [], pageParams = {}) {
         let userBoardsPromises = [];
         let userBoards = [];
         try {
-            const boardUsers = await db.boardUser.findAll({ where: { userId: userId } });
+            const boardUsers = await db.boardUser.findAll({ where: filterParams, order: sortParamsArray, offset: pageParams.offset, limit: pageParams.limit });
             userBoardsPromises = boardUsers.map((boardUser) => db.board.findByPk(boardUser.boardId));
             userBoards = await Promise.all(userBoardsPromises);
         } catch (err) {
