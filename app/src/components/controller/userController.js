@@ -1,4 +1,4 @@
-import { getPageParams, getSearchParams, getSortParamsArray } from "../service/queryParamsParser.js";
+import { getFilterParams, getPageParams, getSearchParams, getSortParamsArray } from "../service/queryParamsParser.js";
 import UserRepository from "../repository/userRepository.js";
 import { generateToken } from "../middleware/authService.js";
 import sendJsonHttpResponse from "../service/httpMessageService.js";
@@ -11,15 +11,16 @@ export default class UserController {
 
     async getUsers(req, res) {
         const queryParams = req.query;
+        const filterParams = getFilterParams(queryParams);
         const nameOrLogin = getSearchParams(queryParams);
         const pageParams = getPageParams(queryParams);
         const sortParamsArray = getSortParamsArray(queryParams);
         let users = [];
         try {
             if (nameOrLogin) {
-                users = await this.userRepository.getUsersByNameOrLogin(nameOrLogin, pageParams, sortParamsArray);
+                users = await this.userRepository.getUsersByNameOrLogin(nameOrLogin, sortParamsArray, pageParams);
             } else {
-                users = await this.userRepository.getUsers();
+                users = await this.userRepository.getUsers(filterParams, sortParamsArray, pageParams);
             }
         } catch (err) {
             return sendJsonHttpResponse(res, 500, "Database error");
