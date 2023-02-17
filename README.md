@@ -548,9 +548,9 @@ Optional:
   **Content:** 
     ```json
       [
-        "{ board instance }",
-        "{ board instance }",
-        "{ board instance }"
+        "{ board entity }",
+        "{ board entity }",
+        "{ board entity }"
       ]
     ```
 * **Error Responses:**
@@ -685,10 +685,7 @@ Optional:
 </details>
 
 # Board Users
-### Board user entity:
----
-<details> 
-
+#### Board user entity:
 ```json
     {
       "id": {
@@ -706,17 +703,177 @@ Optional:
         "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
         "required": true,
       },
+      "role": {
+        "type": "enum",
+        "possible values" : ["ADMIN", "PARTICIPANT", "VIEWER"],
+        "required": true,
+      },
     }
 ```
-</details>
 
 ## Route = /boardUsers
+#### Get board users
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        userId
+        boardId
+        role
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ board user entity }",
+        "{ board user entity }",
+        "{ board user entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get board users" }
+    ```
+</details>
+
+#### Get board user by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[board user entity](#board-user-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such board user doesn't exist" }
+    ```
+</details>
+
+#### Create board user
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "userId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "boardId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "role": {
+        "type": "enum",
+        "possible values" : ["ADMIN", "PARTICIPANT", "VIEWER"],
+        "required": true,
+      },
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[board user entity](#board-user-entity)**
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create board user" }
+    ```
+</details>
+
+#### Edit board user
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[board user entity](#board-user-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[board user entity](#board-user-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such board user doesn't exist" }
+    ```
+</details>
+
+#### Delete board user
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "board user deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such board user doesn't exist" }
+    ```
+</details>
 
 # Board Marks
-### Board mark entity:
----
-<details> 
-
+#### Board mark entity:
 ```json
     {
       "id": {
@@ -741,12 +898,171 @@ Optional:
       },
     }
 ```
+#### Route - /boardMarks
+#### Get board marks
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        boardId
+        name
+        color
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ board mark entity }",
+        "{ board mark entity }",
+        "{ board mark entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get board marks" }
+    ```
 </details>
 
+#### Get board mark by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[board mark entity](#board-mark-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such board mark doesn't exist" }
+    ```
+</details>
+
+#### Create board mark
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "name": {
+        "type": "string",
+        "example": "mark 1",
+        "required": false,
+      },
+      "color": {
+        "type": "string",
+        "example": "red",
+        "required": false,
+      },
+      "boardId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[board mark entity](#board-mark-entity)**
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create board mark" }
+    ```
+</details>
+
+#### Edit board mark
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[board mark entity](#board-mark-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[board mark entity](#board-mark-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such board mark doesn't exist" }
+    ```
+</details>
+
+#### Delete board mark
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "board mark deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such board mark doesn't exist" }
+    ```
+</details>
+
+
+
 # Board Statuses
-### Board status entity:
----
-<details> 
+#### Board status entity:
 
 ```json
     {
@@ -777,12 +1093,176 @@ Optional:
       },
     }
 ```
+
+#### Route - /statuses
+#### Get board statuses
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        boardId
+        name
+        description
+        order
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ board status entity }",
+        "{ board status entity }",
+        "{ board status entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get board statuses" }
+    ```
+</details>
+
+#### Get board status by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[board status entity](#board-status-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such board status doesn't exist" }
+    ```
+</details>
+
+#### Create board status
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "name": {
+        "type": "string",
+        "example": "test status",
+        "required": true,
+      },
+      "description": {
+        "type": "string",
+        "example": "status description",
+        "required": false,
+      },
+      "order": {
+        "type": "number",
+        "example": 5,
+        "required": true,
+      },
+      "boardId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[board status entity](#board-status-entity)**
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create board status" }
+    ```
+</details>
+
+#### Edit board status
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[board status entity](#board-status-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[board status entity](#board-status-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such board status doesn't exist" }
+    ```
+</details>
+
+#### Delete board status
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "board status deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such board status doesn't exist" }
+    ```
 </details>
 
 # Board Tasks
-### Board task entity:
----
-<details> 
+#### Board task entity:
 
 ```json
     {
@@ -828,12 +1308,194 @@ Optional:
       },
     }
 ```
+
+#### Route - /tasks
+#### Get tasks
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        statusId
+        name
+        description
+        order
+        done
+        startDate
+        endDate
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ task entity }",
+        "{ task entity }",
+        "{ task entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get tasks" }
+    ```
+</details>
+
+#### Get task by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[task entity](#board-task-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such task doesn't exist" }
+    ```
+</details>
+
+#### Create task
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "name": {
+        "type": "string",
+        "example": "test status",
+        "required": true,
+      },
+      "description": {
+        "type": "string",
+        "example": "status description",
+        "required": false,
+      },
+      "order": {
+        "type": "number",
+        "example": 5,
+        "required": true,
+      },
+      "done": {
+        "type": "boolean",
+        "example": true,
+        "required": false,
+      },
+      "startDate": {
+        "type": "date",
+        "example": "2023-02-15T13:09:03.737Z",
+        "required": false,
+      },
+      "endDate": {
+        "type": "date",
+        "example": "2023-02-15T13:09:03.737Z",
+        "required": false,
+      },
+      "statusId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[task entity](#board-task-entity)**
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create task" }
+    ```
+</details>
+
+#### Edit task
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[task entity](#board-task-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[task entity](#board-task-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such task doesn't exist" }
+    ```
+</details>
+
+#### Delete task
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "board task deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such task doesn't exist" }
+    ```
 </details>
 
 # Task Attachments
-### Task attachment entity:
----
-<details> 
+#### Task attachment entity:
 
 ```json
     {
@@ -847,6 +1509,11 @@ Optional:
         "example": "test status",
         "required": true,
       },
+      "path": {
+        "type": "string",
+        "example": "test status",
+        "required": false,
+      },
       "type": {
         "type": "enum",
         "values": ["FILE", "HYPERLINK"],
@@ -859,13 +1526,174 @@ Optional:
       },
     }
 ```
+#### Route - /taskAttachments
+#### Get task attachments
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        taskId
+        name
+        path
+        type
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ task attachment entity }",
+        "{ task attachment entity }",
+        "{ task attachment entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get task attachments" }
+    ```
+</details>
+
+#### Get task attachment by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[task attachment entity](#task-attachment-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "Such task attachment doesn't exist" }
+    ```
+</details>
+
+#### Create task attachment
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "name": {
+        "type": "string",
+        "example": "test status",
+        "required": true,
+      },
+      "description": {
+        "type": "string",
+        "example": "status description",
+        "required": false,
+      },
+      "order": {
+        "type": "number",
+        "example": 5,
+        "required": true,
+      },
+      "done": {
+        "type": "boolean",
+        "example": true,
+        "required": false,
+      },
+      "startDate": {
+        "type": "date",
+        "example": "2023-02-15T13:09:03.737Z",
+        "required": false,
+      },
+      "endDate": {
+        "type": "date",
+        "example": "2023-02-15T13:09:03.737Z",
+        "required": false,
+      },
+      "statusId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[task attachment entity](#task-attachment-entity)**
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "No files were uploaded" }
+    ```
+  * **Code:** 500
+  **Content:** 
+    ```json
+      { "message": "Can't upload file" }
+    ```
+</details>
+
+
+#### Delete task attachment
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "Task attachment deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such task attachment doesn't exist" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "Can't access file" }
+    ```
 </details>
 
 # Task Users
-### Task user entity:
----
-<details> 
-
+#### Task user entity:
 ```json
     {
       "id": {
@@ -878,19 +1706,171 @@ Optional:
         "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
         "required": true,
       },
-      "boardUsersid": {
+      "boardUsersId": {
         "type": "string",
         "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
         "required": true,
       },
     }
 ```
+
+#### Route - /taskUsers
+#### Get task users
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        taskId
+        boardUsersid
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ task user entity }",
+        "{ task user entity }",
+        "{ task suer entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get task users" }
+    ```
+</details>
+
+#### Get task user by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[task user entity](#task-user-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such task user doesn't exist" }
+    ```
+</details>
+
+#### Create task user
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "taskId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "boardUsersId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[task user entity](#task-user-entity)**
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create task user" }
+    ```
+</details>
+
+#### Edit task
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[task user entity](#task-user-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[task user entity](#task-user-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such task user doesn't exist" }
+    ```
+</details>
+
+#### Delete task user
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "task user deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such task user doesn't exist" }
+    ```
 </details>
 
 # Task Marks
-### Task mark entity:
----
-<details> 
+#### Task mark entity:
 
 ```json
     {
@@ -904,13 +1884,167 @@ Optional:
         "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
         "required": true,
       },
-      "boardMarkid": {
+      "boardMarkId": {
         "type": "string",
         "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
         "required": true,
       },
     }
 ```
+
+#### Route - /taskMarks
+#### Get task marks
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        taskId
+        boardMarkId
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ task mark entity }",
+        "{ task mark entity }",
+        "{ task mark entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get task marks" }
+    ```
+</details>
+
+#### Get task mark by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[task mark entity](#task-mark-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such task mark doesn't exist" }
+    ```
+</details>
+
+#### Create task mark
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "taskId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "boardMarkId": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[task mark entity](#task-mark-entity)**
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create task mark" }
+    ```
+</details>
+
+#### Edit task mark
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[task mark entity](#task-mark-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[task mark entity](#task-mark-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such task mark doesn't exist" }
+    ```
+</details>
+
+#### Delete task mark
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "task mark deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such task mark doesn't exist" }
+    ```
 </details>
 
 # Administation
