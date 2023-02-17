@@ -6,7 +6,7 @@ Api for Rollong Scopres School task RS-clone
  - **[Authorization responses](#authorization-responses)**
  - **[Database responses](#database-responses)**
  - **[Entities additional fields](#entities-additional-fields)**
- - **[Filer entities](#filter-entities)**
+ - **[Filter entities](#filter-entities)**
  - **Administation**
   - [Get Users](#admin-get-users)
   - [Get User by id](#admin-get-user)
@@ -27,60 +27,59 @@ Api for Rollong Scopres School task RS-clone
   - [Delete user picture](#delete-user-picture)
 - **Boards**
   - [Board entity](#board-entity)
-  - [Get user boards]()
-  - [Get board by id]()
-  - [Create user board]()
-  - [Edit user board]()
-  - [Delete user board]()
+  - [Get user boards](#get-user-boards)
+  - [Get board by id](#get-board-by-id)
+  - [Create user board](#create-user-board)
+  - [Edit user board](#edit-user-board)
+  - [Delete user board](#delete-user-board)
 - **Board Users**
   - [Board user entity](#board-user-entity)
-  - [Get board users]()
-  - [Get board user by id]()
-  - [Create board user]()
-  - [Edit board user]()
-  - [Delete board user]()
+  - [Get board users](#get-board-users)
+  - [Get board user by id](#get-board-user-by-id)
+  - [Create board user](#create-board-user)
+  - [Edit board user](#edit-board-user)
+  - [Delete board user](#delete-board-user)
 - **Board Marks**
   - [Board mark entity](#board-mark-entity)
-  - [Get board marks]()
-  - [Get board mark by id]()
-  - [Create board mark]()
-  - [Edit board mark]()
-  - [Delete board mark]()
+  - [Get board marks](#get-board-marks)
+  - [Get board mark by id](#get-board-mark-by-id)
+  - [Create board mark](#create-board-mark)
+  - [Edit board mark](#edit-board-mark)
+  - [Delete board mark](#delete-board-mark)
 - **Board Statuses**
   - [Board status entity](#board-status-entity)
-  - [Get board statuses]()
-  - [Get board status by id]()
-  - [Create board status]()
-  - [Edit board status]()
-  - [Delete board status]()
+  - [Get board statuses](#get-board-statuses)
+  - [Get board status by id](#get-board-status-by-id)
+  - [Create board status](#create-board-status)
+  - [Edit board status](#edit-board-status)
+  - [Delete board status](#delete-board-status)
 - **Board Tasks**
   - [Task entity](#board-task-entity)
-  - [Get tasks]()
-  - [Get taks by id]()
-  - [Create task]()
-  - [Edit task]()
-  - [Delete task]()
+  - [Get tasks](#get-tasks)
+  - [Get taks by id](#get-task-by-id)
+  - [Create task](#create-task)
+  - [Edit task](#edit-task)
+  - [Delete task](#delete-task)
 - **Task Attachments**
   - [Task attachment entity](#task-attachment-entity)
-  - [Get task attachments]()
-  - [Get task attachment by id]()
-  - [Create task attachment]()
-  - [Edit task attachment]()
-  - [Delete taks attachment]()
+  - [Get task attachments](#get-task-attachments)
+  - [Get task attachment by id](#get-task-attachment-by-id)
+  - [Create task attachment](#create-task-attachment)
+  - [Delete taks attachment](#delete-task-attachment)
 - **Task Users**
   - [Task user entity](#task-user-entity)
-  - [Get task users]()
-  - [Get task user by id]()
-  - [Create task suer]()
-  - [Edit task user]()
-  - [Delete taks user]()
+  - [Get task users](#get-task-users)
+  - [Get task user by id](#get-task-user-by-id)
+  - [Create task suer](#create-task-user)
+  - [Edit task user](#edit-task-user)
+  - [Delete taks user](#delete-task-user)
 - **Task Marks**
   - [Task mark entity](#task-mark-entity)
-  - [Get task marks]()
-  - [Get task mark by id]()
-  - [Create task mark]()
-  - [Edit task mark]()
-  - [Delete taks mark]()
+  - [Get task marks](#get-task-marks)
+  - [Get task mark by id](#get-task-mark-by-id)
+  - [Create task mark](#create-task-mark)
+  - [Edit task mark](#edit-task-mark)
+  - [Delete taks mark](#delete-task-mark)
 - **Administration**
   - [Get users]()
   - [Get user by id]()
@@ -1812,7 +1811,7 @@ Optional:
     ```
 </details>
 
-#### Edit task
+#### Edit task user
 <details>
 
 * **URL** - /
