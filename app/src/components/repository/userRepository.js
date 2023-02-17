@@ -13,7 +13,7 @@ export default class UserRepository extends DbBaseRepository {
         return await super.getAll(filterOptions, sortParamsArray, pageParams);
     }
 
-    async getUsersByNameOrLogin(nameOrLogin, pageParams, sortParamsArray) {
+    async getUsersByNameOrLogin(nameOrLogin, sortParamsArray, pageParams) {
         let users;
         try {
             users = await db.user.findAll({
