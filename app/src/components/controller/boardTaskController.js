@@ -1,5 +1,6 @@
 import TaskRepository from "../repository/taskRepository.js";
 import { getSortParamsArray } from "../service/queryParamsParser.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
 
 export default class TaskController {
     taskRepository;
@@ -15,34 +16,29 @@ export default class TaskController {
         try {
             userBoards = await this.taskRepository.getTasks(filterParams, sortParamsArray);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!userBoards) {
-            res.status(500).send("Server can't get user boards");
-            return;
+            return sendJsonHttpResponse(res, 500, "Server can't get user boards");
         }
-        res.status(200).json(userBoards);
+        return res.status(200).json(userBoards);
     }
 
     async getTaskById(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(400).send("id didn't send");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
         }
         let findedTask;
         try {
             findedTask = await this.taskRepository.getTaskById(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedTask) {
-            res.status(404).send(`task with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task doesn't exist");
         }
-        res.status(200).json(findedTask);
+        return res.status(200).json(findedTask);
     }
 
     async createTask(req, res) {
@@ -51,54 +47,46 @@ export default class TaskController {
         try {
             createdTask = await this.taskRepository.createTask(task);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!createdTask) {
-            res.status(400).send(`can't create task`);
-            return;
+            return sendJsonHttpResponse(res, 400, "can't create task");
         }
-        res.status(201).json(createdTask);
+        return res.status(201).json(createdTask);
     }
 
     async updateTask(req, res) {
         const taskId = req.body.id;
         if (!taskId) {
-            res.status(404).send("task id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
         }
         const task = req.body;
         let updatedTask;
         try {
             updatedTask = await this.taskRepository.updateTask(task);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!updatedTask) {
-            res.status(404).send(`task with id ${taskId} does't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task doesn't exist");
         }
-        res.status(200).json(updatedTask);
+        return res.status(200).json(updatedTask);
     }
 
     async deleteTask(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
         }
         let isDeleted;
         try {
             isDeleted = await this.taskRepository.deleteTask(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!isDeleted) {
-            res.status(404).send(`task with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such task doesn't exist");
         }
-        res.status(204).send("task deleted");
+        return sendJsonHttpResponse(res, 204, "task deleted");
     }
 }

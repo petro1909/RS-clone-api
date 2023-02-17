@@ -1,5 +1,6 @@
 import BoardStatusRepository from "../repository/boardStatusRepository.js";
 import { getSortParamsArray } from "../service/queryParamsParser.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
 
 export default class boardStatusController {
     boardStatusRepository;
@@ -15,34 +16,29 @@ export default class boardStatusController {
         try {
             boardStatuses = await this.boardStatusRepository.getStatuses(filterParams, sortParamsArray);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!boardStatuses) {
-            res.status(500).send("Server can't get board statuses");
-            return;
+            return sendJsonHttpResponse(res, 500, "Server can't get board statuses");
         }
-        res.status(200).json(boardStatuses);
+        return res.status(200).json(boardStatuses);
     }
 
     async getBoardStatusById(req, res) {
         const boardStatusId = req.params.id;
         if (!boardStatusId) {
-            res.status(400).send("id did not send");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
         }
         let findedBoardStatus;
         try {
             findedBoardStatus = await this.boardStatusRepository.getStatusById(boardStatusId);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedBoardStatus) {
-            res.status(404).send(`board status with id ${boardStatusId} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such status doesn't exist");
         }
-        res.status(200).json(findedBoardStatus);
+        return res.status(200).json(findedBoardStatus);
     }
 
     async createBoardStatus(req, res) {
@@ -51,54 +47,46 @@ export default class boardStatusController {
         try {
             createdboardStatus = await this.boardStatusRepository.createStatus(boardStatus);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!createdboardStatus) {
-            res.status(400).send(`can't create board status`);
-            return;
+            return sendJsonHttpResponse(res, 400, "can't create board status");
         }
-        res.status(201).json(createdboardStatus);
+        return res.status(201).json(createdboardStatus);
     }
 
     async updateBoardStatus(req, res) {
         const boardStatusId = req.body.id;
         if (!boardStatusId) {
-            res.status(404).send("task id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
         }
         const boardStatus = req.body;
         let updatedboardStatus;
         try {
             updatedboardStatus = await this.boardStatusRepository.updateStatus(boardStatus);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!updatedboardStatus) {
-            res.status(404).send(`status with id ${boardStatusId} does't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such status doesn't exist");
         }
-        res.status(200).json(updatedboardStatus);
+        return res.status(200).json(updatedboardStatus);
     }
 
     async deleteBoardStatus(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
         }
         let isDeleted;
         try {
             isDeleted = await this.boardStatusRepository.deleteStatus(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!isDeleted) {
-            res.status(404).send(`board status with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such status doesn't exist");
         }
-        res.status(204).send("board status deleted");
+        return sendJsonHttpResponse(res, 204, "board status deleted");
     }
 }

@@ -1,5 +1,6 @@
 import BoardMarkRepository from "../repository/boardMarkRepository.js";
-import { getSortParamsArray } from "../service/queryParamsParser.js";
+import { getFilterParams, getPageParams, getSortParamsArray } from "../service/queryParamsParser.js";
+import sendJsonHttpResponse from "../service/httpMessageService.js";
 
 export default class boardMarkController {
     boardMarkRepository;
@@ -9,40 +10,36 @@ export default class boardMarkController {
 
     async getBoardMarkes(req, res) {
         const queryParams = req.query;
-        const filterParams = { boardId: queryParams.boardId };
+        const filterParams = getFilterParams(queryParams);
         const sortParamsArray = getSortParamsArray(queryParams);
+        const pageParams = getPageParams(queryParams);
         let boardMarks;
         try {
-            boardMarks = await this.boardMarkRepository.getMarks(filterParams, sortParamsArray);
+            boardMarks = await this.boardMarkRepository.getMarks(filterParams, sortParamsArray, pageParams);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!boardMarks) {
-            res.status(500).send("Server can't get board Marks");
-            return;
+            return sendJsonHttpResponse(res, 500, "Server can't get board marks");
         }
-        res.status(200).json(boardMarks);
+        return res.status(200).json(boardMarks);
     }
 
     async getBoardMarkById(req, res) {
         const boardMarkId = req.params.id;
         if (!boardMarkId) {
-            res.status(400).send("id did not send");
-            return;
+            return sendJsonHttpResponse(res, 400, "id did not send");
         }
         let findedBoardMark;
         try {
             findedBoardMark = await this.boardMarkRepository.getMarkById(boardMarkId);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!findedBoardMark) {
-            res.status(404).send(`board status with id ${boardMarkId} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such board mark doesn't exist");
         }
-        res.status(200).json(findedBoardMark);
+        return res.status(200).json(findedBoardMark);
     }
 
     async createBoardMark(req, res) {
@@ -51,54 +48,46 @@ export default class boardMarkController {
         try {
             createdboardMark = await this.boardMarkRepository.createMark(boardMark);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!createdboardMark) {
-            res.status(400).send(`can't create board status`);
-            return;
+            return sendJsonHttpResponse(res, 400, "can't create board mark");
         }
-        res.status(201).json(createdboardMark);
+        return res.status(201).json(createdboardMark);
     }
 
     async updateBoardMark(req, res) {
         const boardMarkId = req.body.id;
         if (!boardMarkId) {
-            res.status(404).send("task id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id did not send");
         }
         const boardMark = req.body;
         let updatedboardMark;
         try {
             updatedboardMark = await this.boardMarkRepository.updateMark(boardMark);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!updatedboardMark) {
-            res.status(404).send(`status with id ${boardMarkId} does't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such board mark doesn't exist");
         }
-        res.status(200).json(updatedboardMark);
+        return res.status(200).json(updatedboardMark);
     }
 
     async deleteBoardMark(req, res) {
         const id = req.params.id;
         if (!id) {
-            res.status(404).send("id does't sent");
-            return;
+            return sendJsonHttpResponse(res, 400, "id did not send");
         }
         let isDeleted;
         try {
             isDeleted = await this.boardMarkRepository.deleteMark(id);
         } catch (err) {
-            res.status(500).send("Database error");
-            return;
+            return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!isDeleted) {
-            res.status(404).send(`board status with id ${id} doesn't exist`);
-            return;
+            return sendJsonHttpResponse(res, 404, "such board mark doesn't exist");
         }
-        res.status(204).send("board status deleted");
+        return sendJsonHttpResponse(res, 204, "board mark deleted");
     }
 }
