@@ -37,6 +37,40 @@ export async function createFile(folderName, file, single) {
         }
     });
 }
+export async function readFromJsonFile(folderName, fileName) {
+    const filePath = `${folderName}/${fileName}`;
+    try {
+        const file = await fs.readFile(filePath);
+        return JSON.parse(file);
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+export async function addToJsonFile(folderName, fileName, data) {
+    try {
+        await fs.access(folderName);
+    } catch (err) {
+        await fs.mkdir(folderName);
+    }
+    const filePath = `${folderName}/${fileName}`;
+    let logArr = [];
+    logArr.push(data);
+    try {
+        await fs.access(filePath);
+        const file = await fs.readFile(filePath);
+        if (file.length === 0) {
+            await fs.writeFile(filePath, JSON.stringify(logArr, null, "\t"));
+        } else {
+            logArr = JSON.parse(file);
+            logArr.push(data);
+            await fs.writeFile(filePath, JSON.stringify(logArr, null, "\t"));
+        }
+    } catch (err) {
+        console.log(err);
+        await fs.appendFile(filePath, JSON.stringify(logArr, null, "\t"));
+    }
+}
 
 export async function deleteFile(folderName, fileName) {
     try {
