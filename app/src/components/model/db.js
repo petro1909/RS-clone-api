@@ -10,9 +10,9 @@ import returnTaskMark from "./dbTaskMark.js";
 import returnTaskUser from "./dbTaskUser.js";
 import returnUser from "./dbUser.js";
 const PGUSER = "postgres";
-const PGPASSWORD = "uhSwetxhUj8Tmwhc8uDd";
-const PGHOST = "containers-us-west-40.railway.app";
-const PGPORT = "7702";
+const PGPASSWORD = "vt7a4T8qngSGqY400SZP";
+const PGHOST = "containers-us-west-62.railway.app";
+const PGPORT = "7602";
 const PGDATABASE = "railway";
 export const sequelize = new Sequelize(`postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}`);
 //"postgresql://postgres:uhSwetxhUj8Tmwhc8uDd@containers-us-west-40.railway.app:7702/railway"
