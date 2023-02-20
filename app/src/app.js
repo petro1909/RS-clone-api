@@ -12,11 +12,14 @@ import fileUpload from "express-fileupload";
 import { boardMarkRouter } from "./components/router/boardMarkRouter.js";
 import { taskUserRouter } from "./components/router/taskUserRouter.js";
 import { taskMarkRouter } from "./components/router/taskMarkRouter.js";
+import { RequestLoggerService } from "./components/middleware/requestLoggerService.js";
 
+const logger = new RequestLoggerService();
 export const staticFilesFolder = path.resolve(process.cwd(), "./src/static");
 export const app = express();
 app.use(cors());
 app.use(fileUpload());
+app.use(logger.makeLog);
 app.use(express.static(staticFilesFolder));
 app.use("/administration", adminRouter);
 app.use("/users", userRouter);
