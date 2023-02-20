@@ -1,0 +1,30 @@
+[
+	{
+		"datetime": "2023-02-18T20:38:50.850Z",
+		"url": "/users/register",
+		"method": "POST",
+		"os": "Windows NT 10.0",
+		"browser": "Chrome"
+	},
+	{
+		"datetime": "2023-02-18T20:38:52.625Z",
+		"url": "/users/register",
+		"method": "POST",
+		"os": "Windows NT 10.0",
+		"browser": "Chrome"
+	},
+	{
+		"datetime": "2023-02-18T20:38:54.251Z",
+		"url": "/users/register",
+		"method": "POST",
+		"os": "Windows NT 10.0",
+		"browser": "Chrome"
+	},
+	{
+		"datetime": "2023-02-18T20:38:55.293Z",
+		"url": "/users/register",
+		"method": "POST",
+		"os": "Windows NT 10.0",
+		"browser": "Chrome"
+	}
+]

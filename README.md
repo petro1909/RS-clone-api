@@ -3,11 +3,11 @@ Api for Rollong Scopres School task RS-clone
 
 
 # Usage
- - **[Authorization responses](#authorization-responses)**
- - **[Database responses](#database-responses)**
- - **[Entities additional fields](#entities-additional-fields)**
- - **[Filter entities](#filter-entities)**
- - **Administation**
+- **[Authorization responses](#authorization-responses)**
+- **[Database responses](#database-responses)**
+- **[Entities additional fields](#entities-additional-fields)**
+- **[Filter entities](#filter-entities)**
+- **Administation**
   - [Get Users](#admin-get-users)
   - [Get User by id](#admin-get-user)
   - [Create User](#admin-create-user)
@@ -119,16 +119,176 @@ Besides entities own fields, each entity has two additional fields:
       },
 ```
 These fields created automatically after any entity is created. There is no need to create, update, or delete it. You can get them with any entity get request.
-# Filer entities
+# Filter entities
 All get requests that get a list of entities, supports several optional query parameters:
-```json
-page=[integer]
-limit=[integer]
-sort=[string] - any entity parameter
-order=["ASC","DESC"]
-```
-Sort and order parameters can by multiple but, sort always should be same count as order
+  * page=[integer]
+  * limit=[integer]
+  * sort=[string] - any entity parameter
+  * order=["ASC","DESC"]
+
+Sort and order parameters can by multiple but, sort always should be same count as order.
+
 # Administation
+
+## Route = /administation
+#### Get users
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        userId
+        name
+        description
+    ```
+**Note**: If query parameter userId is not specified, server send boards of user that found in authorization token.
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ board entity }",
+        "{ board entity }",
+        "{ board entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't get user boards" }
+    ```
+</details>
+
+#### Get board by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[board entity](#board-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such userBoard doesn't exist" }
+    ```
+</details>
+
+#### Create user board
+<details>
+
+* **URL** - /
+* **Method:** - `POST`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params:** None
+* **Data Params**
+```json
+    {
+      "name": {
+        "type": "string",
+        "example": "board name",
+        "required": true,
+      },
+      "description": {
+        "type": "string",
+        "example": "board description",
+        "required": false,
+      }
+    }
+```
+* **Success Response:**
+  * **Code:** 201
+  **Content:** 
+    * **[user entity](#user-entity)**
+
+  **Note** - This request (if succefull) also creates single board user. User id takes from authentification token
+
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "can't create user board" }
+    ```
+</details>
+
+#### Edit user board
+<details>
+
+* **URL** - /
+* **Method:** - `PUT`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params** None
+* **Data Params**
+  * **[board entity](#board-entity)**
+* **Success Response:**
+  * **Code:** 200 
+  **Content:** 
+    * **[board entity](#board-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404 
+  **Content:** 
+    ```json
+      { "message": "such user board does't exist" }
+    ```
+</details>
+
+#### Delete user board
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "user board deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such user board does't exist" }
+    ```
+</details>
+
 # Users
 ### User entity: 
 ```json
