@@ -45,7 +45,7 @@ export default class UserController {
         if (!findedUser) {
             return sendJsonHttpResponse(res, 404, "such user doesn't exist");
         }
-        res.status(200).json(findedUser);
+        return res.status(200).json(findedUser);
     }
 
     async loginUser(req, res) {
@@ -67,7 +67,7 @@ export default class UserController {
             return sendJsonHttpResponse(res, 404, "login or password is not correct");
         }
         const token = generateToken(findedUser);
-        res.status(200).json({ findedUser, token });
+        return res.status(200).json({ findedUser, token });
     }
 
     async registerUser(req, res) {
@@ -90,7 +90,7 @@ export default class UserController {
         if (!createdUser) {
             return sendJsonHttpResponse(res, 400, "user with such email already exist");
         }
-        res.status(201).json(createdUser);
+        return res.status(201).json(createdUser);
     }
 
     async updateUser(req, res) {
@@ -108,6 +108,6 @@ export default class UserController {
         if (!updatedUser) {
             return sendJsonHttpResponse(res, 404, "such user doesn't exist");
         }
-        res.status(200).json(updatedUser);
+        return res.status(200).json(updatedUser);
     }
 }
