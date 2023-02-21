@@ -17,7 +17,7 @@ import { taskMarkRouter } from "./components/router/taskMarkRouter.js";
 // const logger = new RequestLoggerService();
 export const staticFilesFolder = path.resolve(process.cwd(), "./src/static");
 export const app = express();
-app.use(cors());
+app.use(cors({ credentials: true }));
 app.use(fileUpload());
 // app.use(logger.makeLog);
 app.use(express.static(staticFilesFolder));
