@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "node ./src/app.js",
+    "build": "",
     "start": "nodemon ./src/app.js",
     "lint_fix": "eslint --fix --ext .js ."
   },
