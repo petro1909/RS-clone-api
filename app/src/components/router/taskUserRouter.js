@@ -3,6 +3,8 @@ import TaskUserController from "../controller/taskUserController.js";
 import { verifyUser } from "../middleware/authService.js";
 
 export const taskUserRouter = express.Router();
+export default { route: "taskUsers", router: taskUserRouter };
+
 const parser = express.json();
 const taskUserController = new TaskUserController();
 

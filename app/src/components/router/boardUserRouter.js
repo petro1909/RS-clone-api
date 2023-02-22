@@ -3,6 +3,8 @@ import BoardUserController from "../controller/boardUserController.js";
 import { verifyUser } from "../middleware/authService.js";
 
 export const boardUserRouter = express.Router();
+export default { route: "boardUsers", router: boardUserRouter };
+
 const parser = express.json();
 const boardUserController = new BoardUserController();
 

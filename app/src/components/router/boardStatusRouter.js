@@ -1,7 +1,9 @@
 import express from "express";
 import BoardStatusController from "../controller/boardStatusController.js";
 
-export const boardStatusRouter = express.Router();
+const boardStatusRouter = express.Router();
+export default { route: "statuses", router: boardStatusRouter };
+
 const parser = express.json();
 const boardStatusController = new BoardStatusController();
 import { verifyUser } from "../middleware/authService.js";

@@ -3,6 +3,8 @@ import TaskMarkController from "../controller/taskMarkController.js";
 import { verifyUser } from "../middleware/authService.js";
 
 export const taskMarkRouter = express.Router();
+export default { route: "taskMarks", router: taskMarkRouter };
+
 const parser = express.json();
 const taskMarkController = new TaskMarkController();
 

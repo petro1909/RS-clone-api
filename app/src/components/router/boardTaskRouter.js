@@ -3,6 +3,8 @@ import TaskController from "../controller/boardTaskController.js";
 import { verifyUser } from "../middleware/authService.js";
 
 export const boardTaskRouter = express.Router();
+export default { route: "tasks", router: boardTaskRouter };
+
 const parser = express.json();
 const taksController = new TaskController();
 
