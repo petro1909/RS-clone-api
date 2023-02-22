@@ -1,5 +1,5 @@
 import path from "path";
-import { db } from "./components/model/db.js";
+import { db } from "./components/database/index.js";
 import cors from "cors";
 import express from "express";
 import { userRouter } from "./components/router/userRouter.js";
@@ -36,7 +36,7 @@ try {
 } catch (err) {
     console.error(err);
 }
-
-app.listen(3000, () => {
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
     console.log("server is started on port 3000");
 });
