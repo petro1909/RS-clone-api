@@ -1,5 +1,5 @@
 import { UniqueConstraintError, Op } from "sequelize";
-import { db } from "../model/db.js";
+import { db } from "../database/index.js";
 import { comparePassword, hashPassword } from "../service/passwordHasher.js";
 import { staticFilesFolder } from "../../app.js";
 import DbBaseRepository from "./baseRepository.js";
