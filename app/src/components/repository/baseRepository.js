@@ -24,8 +24,10 @@ export default class DbBaseRepository {
     async create(entity) {
         let createdEntity;
         try {
+            console.log(entity);
             createdEntity = await db[this.type].create(entity);
         } catch (err) {
+            console.log(err);
             throw new Error(err);
         }
         return createdEntity;

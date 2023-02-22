@@ -6,11 +6,10 @@ import fs from "fs/promises";
 import fileUpload from "express-fileupload";
 import { RequestLoggerService } from "./components/middleware/requestLoggerService.js";
 
-export const routers = new Map();
 const logger = new RequestLoggerService();
 export const staticFilesFolder = path.resolve(process.cwd(), "./src/static");
 export const app = express();
-app.use(cors());
+app.use(cors({ credentials: true }));
 app.use(fileUpload());
 app.use(logger.makeLog);
 app.use(express.static(staticFilesFolder));
@@ -36,7 +35,9 @@ try {
     console.error(err);
 }
 
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log("server is started on port 3000");
+    console.log(`server is started at port ${port}`);
+
 });

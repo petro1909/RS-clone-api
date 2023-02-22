@@ -18,7 +18,7 @@ boardTaskRouter.get("/:id", verifyUser, async (req, res) => {
     await taksController.getTaskById(req, res);
 });
 
-boardTaskRouter.post("/", verifyUser, parser, async (req, res) => {
+boardTaskRouter.post("/", parser, async (req, res) => {
     // create new task
     await taksController.createTask(req, res);
 });
