@@ -9,7 +9,7 @@ import { RequestLoggerService } from "./components/middleware/requestLoggerServi
 const logger = new RequestLoggerService();
 export const staticFilesFolder = path.resolve(process.cwd(), "./src/static");
 export const app = express();
-app.use(cors({ credentials: true }));
+app.use(cors());
 app.use(fileUpload());
 app.use(logger.makeLog);
 app.use(express.static(staticFilesFolder));
@@ -35,9 +35,7 @@ try {
     console.error(err);
 }
 
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`server is started at port ${port}`);
-
+    console.log("server is started on port 3000");
 });
