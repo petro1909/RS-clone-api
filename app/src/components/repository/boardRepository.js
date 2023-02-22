@@ -1,4 +1,4 @@
-import { db } from "../model/db.js";
+import { db } from "../database/index.js";
 import DbBaseRepository from "./baseRepository.js";
 
 export default class BoardRepository extends DbBaseRepository {

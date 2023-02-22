@@ -1,4 +1,4 @@
-import { db } from "../model/db.js";
+import { db } from "../database/index.js";
 
 export default class DbBaseRepository {
     async getAll(filterOptions = {}, sortParamsArray = [], pageParams = {}) {
