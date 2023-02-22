@@ -4,6 +4,8 @@ import UserController from "../controller/userController.js";
 import { verifyRequiredRole, verifyUser } from "../middleware/authService.js";
 
 export const adminRouter = express.Router();
+export default { route: "administration", router: adminRouter };
+
 const parser = express.json();
 const adminController = new AdminController();
 const userController = new UserController();

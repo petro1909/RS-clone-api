@@ -1,11 +1,13 @@
+"use strict";
 import express from "express";
 import UserController from "../controller/userController.js";
 import UserPictureController from "../controller/userPictureController.js";
 import { verifyUser } from "../middleware/authService.js";
 
-export const userRouter = express.Router();
-const parser = express.json();
+const userRouter = express.Router();
+export default { route: "users", router: userRouter };
 
+const parser = express.json();
 const userController = new UserController();
 const userPictureController = new UserPictureController();
 

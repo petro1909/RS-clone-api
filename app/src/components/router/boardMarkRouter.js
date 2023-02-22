@@ -2,6 +2,8 @@ import express from "express";
 import BoardMarkController from "../controller/boardMarkController.js";
 
 export const boardMarkRouter = express.Router();
+export default { route: "boardMarks", router: boardMarkRouter };
+
 const parser = express.json();
 const boardMarkController = new BoardMarkController();
 import { verifyUser } from "../middleware/authService.js";
