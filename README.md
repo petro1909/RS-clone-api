@@ -9,10 +9,10 @@ Api for Rollong Scopres School task RS-clone
 - **[Filter entities](#filter-entities)**
 - **Administation**
   - [Get Users](#admin-get-users)
-  - [Get User by id](#admin-get-user)
+  - [Get User by id](#admin-get-user-by-id)
   - [Create User](#admin-create-user)
   - [Edit user](#admin-edit-user) 
-  - [Delete user](#admin-delete-user)
+  - [Delete user](#admin-delete-user-by-id)
   - [Statistic entity](#statistic-entity)
   - [Get statistics](#get-statistics)
   - [Get statistic by id](#get-statistic-by-id)
@@ -135,7 +135,7 @@ Sort and order parameters can by multiple but, sort always should be same count 
 # Administation
 
 ## Route = /administation
-#### Get users
+#### Admin Get users
 <details>
 
 * **URL** - /
@@ -167,7 +167,7 @@ Optional:
     ```
 </details>
 
-#### Get user by id
+#### Admin get user by id
 <details>
 
 * **URL** - /:id
@@ -195,7 +195,7 @@ Optional:
     ```
 </details>
 
-#### Create user
+#### Admin create user
 <details>
 
 * **URL** - /
@@ -248,7 +248,7 @@ Optional:
     ```
 </details>
 
-#### Edit user
+#### Admin edit user
 <details>
 
 * **URL** - /
@@ -298,7 +298,7 @@ Optional:
     ```
 </details>
 
-#### Delete user
+#### Admin delete user by id
 <details>
 
 * **URL** - /
