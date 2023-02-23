@@ -34,7 +34,6 @@ export default class DbBaseRepository {
             await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
-        console.log(createdEntity);
         return createdEntity.dataValues;
     }
 
