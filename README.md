@@ -13,6 +13,10 @@ Api for Rollong Scopres School task RS-clone
   - [Create User](#admin-create-user)
   - [Edit user](#admin-edit-user) 
   - [Delete user](#admin-delete-user)
+  - [Statistic entity](#statistic-entity)
+  - [Get statistics](#get-statistics)
+  - [Get statistic by id](#get-statistic-by-id)
+  - [Delete statistic by id](#delete-statisctic)
 - **Users**
   - [User entity](#user-entity)
   - [Login User](#login-user)
@@ -142,31 +146,28 @@ Sort and order parameters can by multiple but, sort always should be same count 
 Required: None
 Optional:
     ```json
-        userId
-        name
-        description
+        search[string] - search user by part of email or name 
     ```
-**Note**: If query parameter userId is not specified, server send boards of user that found in authorization token.
 * **Data Params**  None
 * **Success Response:**
   * **Code:** 200 <br/> 
   **Content:** 
     ```json
       [
-        "{ board entity }",
-        "{ board entity }",
-        "{ board entity }"
+        "{ user entity }",
+        "{ user entity }",
+        "{ user entity }"
       ]
     ```
 * **Error Responses:**
   * **Code:** 500 <br/> 
   **Content:** 
     ```json
-      { "message": "Server can't get user boards" }
+      { "message": "Server can't get users" }
     ```
 </details>
 
-#### Get board by id
+#### Get user by id
 <details>
 
 * **URL** - /:id
@@ -180,7 +181,7 @@ Optional:
 * **Success Response:**
   * **Code:** 200
   **Content:** 
-    * **[board entity](#board-entity)**
+    * **[user entity](#user-entity)**
 * **Error Responses:**
   * **Code:** 400 
   **Content:** 
@@ -190,76 +191,114 @@ Optional:
   * **Code:** 404
   **Content:** 
     ```json
-      { "message": "such userBoard doesn't exist" }
+      { "message": "such user doesn't exist" }
     ```
 </details>
 
-#### Create user board
+#### Create user
 <details>
 
 * **URL** - /
 * **Method:** - `POST`
-* **Headers:** Authorization
-*  **URL Params:** None
-* **Query Params:** None
+* **Headers:** 
+  None
+*  **URL Params:**
+  None
+* **Query Params**
+    None
 * **Data Params**
 ```json
     {
       "name": {
         "type": "string",
-        "example": "board name",
+        "example": "Gerbert",
+        "required": false,
+      },
+      "email": {
+        "type": "string",
+        "example": "example@gmail.com",
         "required": true,
       },
-      "description": {
+      "password": {
         "type": "string",
-        "example": "board description",
-        "required": false,
-      }
+        "example": "password",
+        "required": true,
+      },
     }
 ```
 * **Success Response:**
-  * **Code:** 201
+  * **Code:** 200 
   **Content:** 
     * **[user entity](#user-entity)**
-
-  **Note** - This request (if succefull) also creates single board user. User id takes from authentification token
-
 * **Error Responses:**
   * **Code:** 400 
   **Content:** 
     ```json
-      { "message": "can't create user board" }
+      { "message": "email can not be empty" }
+    ```
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "password can not be empty" }
+    ```
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "user with such email already exist" }
     ```
 </details>
 
-#### Edit user board
+#### Edit user
 <details>
 
 * **URL** - /
 * **Method:** - `PUT`
 * **Headers:** Authorization
-*  **URL Params:** None
+*  **URL Params** None
 * **Query Params** None
-* **Data Params**
-  * **[board entity](#board-entity)**
+* **Data Params** 
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "name": {
+        "type": "string",
+        "example": "Gerbert",
+        "required": false,
+      },
+      "email": {
+        "type": "string",
+        "example": "example@gmail.com",
+        "required": false,
+      },
+      "password": {
+        "type": "string",
+        "example": "password",
+        "required": false,
+      }
+    }
+```
 * **Success Response:**
-  * **Code:** 200 
+  * **Code:** 200
   **Content:** 
-    * **[board entity](#board-entity)**
+      * **[user entity](#user-entity)**
 * **Error Responses:**
   * **Code:** 400 
   **Content:** 
     ```json
-      { "message": "id didn't send" }
+      { "message": "id didn't sent" }
     ```
-  * **Code:** 404 
+  * **Code:** 404
   **Content:** 
     ```json
-      { "message": "such user board does't exist" }
+      { "message": "such user doesn't exist" }
     ```
 </details>
 
-#### Delete user board
+#### Delete user
 <details>
 
 * **URL** - /
@@ -274,7 +313,7 @@ Optional:
   * **Code:** 204
   **Content:** 
     ```json
-      { "message": "user board deleted" }
+      { "message": "user deleted" }
     ```
 * **Error Responses:**
   * **Code:** 400
@@ -285,7 +324,137 @@ Optional:
   * **Code:** 404
   **Content:** 
     ```json
-      { "message": "such user board does't exist" }
+      { "message": "such user doesn't exist" }
+    ```
+</details>
+
+#### Statistic entity:
+```json
+    {
+      "id": {
+        "type": "string",
+        "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
+        "required": true,
+      },
+      "logDate": {
+        "type": "date",
+        "example": "Test board",
+        "required": true,
+      },
+      "url": {
+        "type": "string",
+        "example": "board description",
+        "required": true,
+      },
+      "method": {
+        "type": "string",
+        "example": "get",
+        "required": true,
+      },
+      "os": {
+        "type": "string",
+        "example": "windows",
+        "required": true,
+      },
+      "browser": {
+        "type": "string",
+        "example": "chrome",
+        "required": true,
+      }
+    }
+```
+### Route = /statistics
+#### Get statistics
+<details>
+
+* **URL** - /
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params:** None
+* **Query Params**
+Required: None
+Optional:
+    ```json
+        os
+        browser
+        method
+        url
+        logDate
+    ```
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200 <br/> 
+  **Content:** 
+    ```json
+      [
+        "{ statistic entity }",
+        "{ statistic entity }",
+        "{ statistic entity }"
+      ]
+    ```
+* **Error Responses:**
+  * **Code:** 500 <br/> 
+  **Content:** 
+    ```json
+      { "message": "Server can't request log" }
+    ```
+</details>
+
+#### Get statistic by id
+<details>
+
+* **URL** - /:id
+* **Method:** - `GET`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params**  None
+* **Success Response:**
+  * **Code:** 200
+  **Content:** 
+    * **[statistic entity](#statistic-entity)**
+* **Error Responses:**
+  * **Code:** 400 
+  **Content:** 
+    ```json
+      { "message": "id didn't sent" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such request log doesn't exist" }
+    ```
+</details>
+
+#### Delete statistic
+<details>
+
+* **URL** - /
+* **Method:** - `DELETE`
+* **Headers:** Authorization
+*  **URL Params**
+    **Required:**
+    `id=[string]`
+* **Query Params** None
+* **Data Params** None
+* **Success Response:**
+  * **Code:** 204
+  **Content:** 
+    ```json
+      { "message": "request log deleted" }
+    ```
+* **Error Responses:**
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "id didn't send" }
+    ```
+  * **Code:** 404
+  **Content:** 
+    ```json
+      { "message": "such request log doesn't exist" }
     ```
 </details>
 
@@ -809,7 +978,7 @@ Optional:
   * **Code:** 404 
   **Content:** 
     ```json
-      { "message": "such user board does't exist" }
+      { "message": "such user board doesn't exist" }
     ```
 </details>
 
@@ -839,7 +1008,7 @@ Optional:
   * **Code:** 404
   **Content:** 
     ```json
-      { "message": "such user board does't exist" }
+      { "message": "such user board doesn't exist" }
     ```
 </details>
 
@@ -1675,7 +1844,7 @@ Optional:
       },
       "type": {
         "type": "enum",
-        "values": ["FILE", "HYPERLINK"],
+        "values": ["FILE", "LINK"],
         "required": true,
       },
       "taskId": {
@@ -1758,6 +1927,23 @@ Optional:
 *  **URL Params:** None
 * **Query Params:** None
 * **Data Params**
+* **Data Params**
+  If attachment is file
+```
+form-data: 
+    <input type="file" name="file"/>
+    <input type="hidden" name="taskId"/>
+    <input type="hidden" name="type" value="FILE"/>
+```
+  IF attachment is link: 
+  or
+```
+form-data: 
+    <input type="string" name="name"/>
+    <input type="hidden" name="taskId"/>
+    <input type="hidden" name="type" value="LINK"/>
+```
+  or
 ```json
     {
       "name": {
@@ -1765,32 +1951,12 @@ Optional:
         "example": "test status",
         "required": true,
       },
-      "description": {
-        "type": "string",
-        "example": "status description",
-        "required": false,
-      },
-      "order": {
-        "type": "number",
-        "example": 5,
+      "type": {
+        "type": "enum",
+        "values": "LINK",
         "required": true,
       },
-      "done": {
-        "type": "boolean",
-        "example": true,
-        "required": false,
-      },
-      "startDate": {
-        "type": "date",
-        "example": "2023-02-15T13:09:03.737Z",
-        "required": false,
-      },
-      "endDate": {
-        "type": "date",
-        "example": "2023-02-15T13:09:03.737Z",
-        "required": false,
-      },
-      "statusId": {
+      "taskId": {
         "type": "string",
         "example": "1144e4d3-8d2e-4568-af1a-8e30f1e43bd7",
         "required": true,
