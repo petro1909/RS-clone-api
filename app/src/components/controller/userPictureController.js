@@ -24,7 +24,7 @@ export default class UserPictureController {
         const userFolder = this.userRepository.getUserFolder(userId);
         const userPicture = await getStaticFile(userFolder, profilePictureName);
         if (userPicture) {
-            return res.json({ profilePicture: `/users/${userId}/${profilePictureName}` });
+            return res.json({ profilePicture: this.userRepository.getUserFileRelativePath(userId, profilePictureName) });
         } else {
             return sendJsonHttpResponse(res, 404, "Can't access file");
         }
@@ -55,7 +55,7 @@ export default class UserPictureController {
             } catch (err) {
                 return sendJsonHttpResponse(res, 500, "Database error");
             }
-            return res.status(200).json({ profilePicture: `/users/${findedUser.id}/${picture.name}` });
+            return res.status(200).json({ profilePicture: this.userRepository.getUserFileRelativePath(findedUser.id, picture.name) });
         } else {
             return sendJsonHttpResponse(res, 500, "Can't upload file");
         }
