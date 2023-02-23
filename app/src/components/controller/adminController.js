@@ -1,10 +1,13 @@
+import RequestLogRepository from "../repository/requestLogRepository.js";
 import UserRepository from "../repository/userRepository.js";
 import sendJsonHttpResponse from "../service/httpMessageService.js";
+import { getFilterParams, getPageParams, getSortParamsArray } from "../service/queryParamsParser.js";
 
 export default class AdminController {
     userRepository;
     constructor() {
         this.userRepository = new UserRepository();
+        this.requestLogRepository = new RequestLogRepository();
     }
 
     async updateUser(req, res) {
@@ -40,5 +43,56 @@ export default class AdminController {
             return sendJsonHttpResponse(res, 404, "such user doesn't exist");
         }
         res.status(204).send("user deleted");
+    }
+
+    async getStatistics(req, res) {
+        const queryParams = req.query;
+        const filterParams = getFilterParams(queryParams);
+        const sortParamsArray = getSortParamsArray(queryParams);
+        const pageParams = getPageParams(queryParams);
+        let requestLogArray;
+        try {
+            requestLogArray = await this.requestLogRepository.getRequestLogs(filterParams, sortParamsArray, pageParams);
+        } catch (err) {
+            return sendJsonHttpResponse(res, 500, "Database error");
+        }
+        if (!requestLogArray) {
+            return sendJsonHttpResponse(res, 500, "Server can't get request log");
+        }
+        return res.status(200).json(requestLogArray);
+    }
+
+    async getStatisticById(req, res) {
+        const id = req.params.id;
+        if (!id) {
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
+        }
+        let findedRequestLog;
+        try {
+            findedRequestLog = await this.requestLogRepository.getRequestLogId(id);
+        } catch (err) {
+            return sendJsonHttpResponse(res, 500, "Database error");
+        }
+        if (!findedRequestLog) {
+            return sendJsonHttpResponse(res, 404, "such request log doesn't exist");
+        }
+        return res.status(200).json(findedRequestLog);
+    }
+
+    async deleteStatistic(req, res) {
+        const id = req.params.id;
+        if (!id) {
+            return sendJsonHttpResponse(res, 400, "id didn't sent");
+        }
+        let isDeleted;
+        try {
+            isDeleted = await this.requestLogRepository.deleteRequestLog(id);
+        } catch (err) {
+            return sendJsonHttpResponse(res, 500, "Database error");
+        }
+        if (!isDeleted) {
+            return sendJsonHttpResponse(res, 404, "such request log doesn't exist");
+        }
+        return sendJsonHttpResponse(res, 204, "request log deleted");
     }
 }
