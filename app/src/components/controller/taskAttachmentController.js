@@ -19,7 +19,7 @@ export default class TaskAttachmentController {
         const sortParamsArray = getSortParamsArray(queryParams);
         let findedTaskAttachments;
         try {
-            findedTaskAttachments = await this.taskAttachmentRepository.getAll(filterParams, sortParamsArray, pageParams);
+            findedTaskAttachments = await this.taskAttachmentRepository.getTaskAttachments(filterParams, sortParamsArray, pageParams);
         } catch (err) {
             return sendJsonHttpResponse(res, 500, "Database error");
         }
@@ -27,14 +27,14 @@ export default class TaskAttachmentController {
         let findedTaskAttachmentsPaths = [];
         const taskFolder = this.taskRepository.getTaskFolder(taskId);
         findedTaskAttachmentsPathsPromises = findedTaskAttachments
-            .map((attachment) => {
+            .map(async (attachment) => {
                 if (attachment.type === "LINK") {
                     return attachment;
                 }
                 const attachmentName = attachment.name;
-                const attachmentPath = getStaticFile(taskFolder, attachmentName);
+                const attachmentPath = await getStaticFile(taskFolder, attachmentName);
                 if (!attachmentPath) return null;
-                attachment.path = attachmentPath;
+                attachment.path = this.taskRepository.getTaskFileRelativePath(attachment.taskId, attachment.name);
                 return attachment;
             })
             .filter((attachment) => attachment !== null);
@@ -64,7 +64,7 @@ export default class TaskAttachmentController {
         const taskFolder = this.taskRepository.getTaskFolder(findedTaskAttachment.taskId);
         const attachmentPath = await getStaticFile(taskFolder, findedTaskAttachment.name);
         if (attachmentPath) {
-            findedTaskAttachment.path = attachmentPath;
+            findedTaskAttachment.path = this.taskRepository.getTaskFileRelativePath(findedTaskAttachment.taskId, findedTaskAttachment.name);
             return res.status(200).json(findedTaskAttachment);
         } else {
             return sendJsonHttpResponse(res, 404, "Can't access file");
