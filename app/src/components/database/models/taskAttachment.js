@@ -16,8 +16,8 @@ export default (sequelize, DataTypes) => {
             },
             type: {
                 type: DataTypes.ENUM,
-                values: ["FILE", "HYPERLINK"],
-                allowNull: true,
+                values: ["FILE", "LINK"],
+                allowNull: false,
             },
         },
         {

@@ -1,6 +1,3 @@
-// import path from "path";
-// import { staticFilesFolder } from "../../app.js";
-// import { addToJsonFile } from "../service/fileService.js";
 import RequestLogRepository from "../repository/requestLogRepository.js";
 
 export class RequestLoggerService {
@@ -9,7 +6,9 @@ export class RequestLoggerService {
     }
     makeLog = async (req, res, next) => {
         const userAgentString = req.headers["user-agent"];
-
+        if (!userAgentString) {
+            return next();
+        }
         let osConfigString = userAgentString.match(/\([\dA-Za-z;\s.]*\)/)[0];
         osConfigString = osConfigString.slice(1, osConfigString.length - 1);
         const osConfigArr = osConfigString.split(";");

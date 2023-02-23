@@ -1,15 +1,19 @@
 import { db } from "../database/index.js";
+import ErrorLoggerService, { logLevels } from "../service/errorLoggerService.js";
 
 export default class DbBaseRepository {
+    constructor() {
+        this.errorLoggerService = new ErrorLoggerService();
+    }
     async getAll(filterOptions = {}, sortParamsArray = [], pageParams = {}) {
         let entities;
         try {
             entities = await db[this.type].findAll({ where: filterOptions, order: sortParamsArray, offset: pageParams.offset, limit: pageParams.limit });
         } catch (err) {
-            console.log(err);
+            await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
-        return entities;
+        return entities.map((entity) => entity.dataValues);
     }
 
     async getById(id) {
@@ -17,20 +21,21 @@ export default class DbBaseRepository {
         try {
             entity = await db[this.type].findByPk(id);
         } catch (err) {
+            await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
-        return entity;
+        return entity.dataValues;
     }
     async create(entity) {
         let createdEntity;
         try {
-            console.log(entity);
             createdEntity = await db[this.type].create(entity);
         } catch (err) {
-            console.log(err);
+            await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
-        return createdEntity;
+        console.log(createdEntity);
+        return createdEntity.dataValues;
     }
 
     async update(entity) {
@@ -44,6 +49,7 @@ export default class DbBaseRepository {
                 plain: true,
             });
         } catch (err) {
+            await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
         if (!updatedEntityResult[1]) {
@@ -58,6 +64,7 @@ export default class DbBaseRepository {
         try {
             isDeleted = await db[this.type].destroy({ where: { id: id } });
         } catch (err) {
+            await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
         return isDeleted;

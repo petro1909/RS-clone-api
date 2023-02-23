@@ -27,6 +27,9 @@ export default class TaskRepository extends DbBaseRepository {
     }
 
     getTaskFolder(taskId) {
-        return `${staticFilesFolder}/tasks/${taskId}`;
+        return `${staticFilesFolder}/taskFolder/${taskId}`;
+    }
+    getTaskFileRelativePath(taskId, fileName) {
+        return `/taskFolder/${taskId}/${fileName}`;
     }
 }

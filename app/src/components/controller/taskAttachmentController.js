@@ -19,7 +19,7 @@ export default class TaskAttachmentController {
         const sortParamsArray = getSortParamsArray(queryParams);
         let findedTaskAttachments;
         try {
-            findedTaskAttachments = await this.taskAttachmentRepository.getAll(filterParams, sortParamsArray, pageParams);
+            findedTaskAttachments = await this.taskAttachmentRepository.getTaskAttachments(filterParams, sortParamsArray, pageParams);
         } catch (err) {
             return sendJsonHttpResponse(res, 500, "Database error");
         }
@@ -27,19 +27,19 @@ export default class TaskAttachmentController {
         let findedTaskAttachmentsPaths = [];
         const taskFolder = this.taskRepository.getTaskFolder(taskId);
         findedTaskAttachmentsPathsPromises = findedTaskAttachments
-            .map((attachment) => {
+            .map(async (attachment) => {
                 if (attachment.type === "LINK") {
                     return attachment;
                 }
                 const attachmentName = attachment.name;
-                const attachmentPath = getStaticFile(taskFolder, attachmentName);
+                const attachmentPath = await getStaticFile(taskFolder, attachmentName);
                 if (!attachmentPath) return null;
-                attachment.path = attachmentPath;
+                attachment.path = this.taskRepository.getTaskFileRelativePath(attachment.taskId, attachment.name);
                 return attachment;
             })
             .filter((attachment) => attachment !== null);
         try {
-            findedTaskAttachmentsPaths = Promise.all(findedTaskAttachmentsPathsPromises);
+            findedTaskAttachmentsPaths = await Promise.all(findedTaskAttachmentsPathsPromises);
         } catch (err) {
             return sendJsonHttpResponse(res, 500, "Server can't get task attachments");
         }
@@ -64,7 +64,7 @@ export default class TaskAttachmentController {
         const taskFolder = this.taskRepository.getTaskFolder(findedTaskAttachment.taskId);
         const attachmentPath = await getStaticFile(taskFolder, findedTaskAttachment.name);
         if (attachmentPath) {
-            findedTaskAttachment.path = attachmentPath;
+            findedTaskAttachment.path = this.taskRepository.getTaskFileRelativePath(findedTaskAttachment.taskId, findedTaskAttachment.name);
             return res.status(200).json(findedTaskAttachment);
         } else {
             return sendJsonHttpResponse(res, 404, "Can't access file");
@@ -74,13 +74,15 @@ export default class TaskAttachmentController {
     async uploadTaskAttachment(req, res) {
         const taskId = req.body.taskId;
         const attachmentType = req.body.type;
-
-        if (!req.files) {
-            return sendJsonHttpResponse(res, 400, "No files were uploaded");
-        }
-        const picture = req.files[0];
-        const attachment = { name: picture.name, attachmentType: attachmentType, taskId: taskId };
-        if (!attachmentType === "LINK") {
+        let attachment;
+        if (attachmentType === "LINK") {
+            attachment = { name: req.body.name, type: attachmentType, taskId: taskId };
+        } else if (attachmentType === "FILE") {
+            if (!req.files) {
+                return sendJsonHttpResponse(res, 400, "No files were uploaded");
+            }
+            const picture = req.files.file;
+            attachment = { name: picture.name, type: attachmentType, taskId: taskId };
             const taskFolder = this.taskRepository.getTaskFolder(taskId);
             const isCreated = await createFile(taskFolder, picture, false);
             if (!isCreated) {
@@ -103,28 +105,29 @@ export default class TaskAttachmentController {
         }
         let findedTaskAttachment;
         try {
-            const findedTaskAttachment = await this.taskAttachmentRepository.getById(taskAttachmentId);
+            findedTaskAttachment = await this.taskAttachmentRepository.getById(taskAttachmentId);
             if (!findedTaskAttachment) {
                 return sendJsonHttpResponse(res, 404, "such task attachment doesn't exist");
             }
         } catch (err) {
             return sendJsonHttpResponse(res, 500, "Database error");
         }
-        const taskFolder = this.taskRepository.getTaskFolder(findedTaskAttachment.taskId);
-        const isFileDeleted = await deleteFile(taskFolder, findedTaskAttachment.name);
-        if (isFileDeleted) {
-            let isTaskAttachmentDeleted;
-            try {
-                isTaskAttachmentDeleted = await this.taskAttachmentRepository.deleteAttachment(taskAttachmentId);
-            } catch (err) {
-                return sendJsonHttpResponse(res, 500, "Database error");
+        if (findedTaskAttachment.type === "FILE") {
+            const taskFolder = this.taskRepository.getTaskFolder(findedTaskAttachment.taskId);
+            const isFileDeleted = await deleteFile(taskFolder, findedTaskAttachment.name);
+            if (!isFileDeleted) {
+                return sendJsonHttpResponse(res, 404, "Can't access file");
             }
-            if (!isTaskAttachmentDeleted) {
-                return sendJsonHttpResponse(res, 404, "such task attachment doesn't exist");
-            }
-            return sendJsonHttpResponse(res, 204, "Task attachment deleted");
-        } else {
-            return sendJsonHttpResponse(res, 404, "Can't access file");
         }
+        let isTaskAttachmentDeleted;
+        try {
+            isTaskAttachmentDeleted = await this.taskAttachmentRepository.deleteAttachment(taskAttachmentId);
+        } catch (err) {
+            return sendJsonHttpResponse(res, 500, "Database error");
+        }
+        if (!isTaskAttachmentDeleted) {
+            return sendJsonHttpResponse(res, 404, "such task attachment doesn't exist");
+        }
+        return sendJsonHttpResponse(res, 204, "Task attachment deleted");
     }
 }

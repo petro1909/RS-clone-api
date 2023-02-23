@@ -93,4 +93,8 @@ export default class UserRepository extends DbBaseRepository {
     getUserFolder(userId) {
         return `${staticFilesFolder}/users/${userId}`;
     }
+
+    getUserFileRelativePath(userId, fileName) {
+        return `/users/${userId}/${fileName}`;
+    }
 }
