@@ -32,22 +32,14 @@ adminRouter.delete("/users/:id", verifyUser, verifyRequiredRole("ADMIN"), async 
 });
 
 adminRouter.get("/statistics", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
-    // get users queries statistic
-    await adminController.getUsers(req, res);
+    // get users queries statistics
+    await adminController.getStatistics(req, res);
 });
 adminRouter.get("/statistics/:id", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
-    // get users queries statistic
-    await adminController.getUsers(req, res);
-});
-adminRouter.post("/statistics", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
-    // post user statistics
-    await adminController.getUsers(req, res);
-});
-adminRouter.put("/statistics", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
-    // post user statistics
-    await adminController.getUsers(req, res);
+    // get users queries statistic by id
+    await adminController.getStatisticById(req, res);
 });
 adminRouter.delete("/statistics/:id", verifyUser, verifyRequiredRole("ADMIN"), async (req, res) => {
     // delete user statistics
-    await adminController.getUsers(req, res);
+    await adminController.deleteStatistic(req, res);
 });
