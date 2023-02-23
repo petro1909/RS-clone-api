@@ -57,7 +57,7 @@ export default class AdminController {
             return sendJsonHttpResponse(res, 500, "Database error");
         }
         if (!requestLogArray) {
-            return sendJsonHttpResponse(res, 500, "Server can't get request log");
+            return sendJsonHttpResponse(res, 500, "Server can't get request logs");
         }
         return res.status(200).json(requestLogArray);
     }
