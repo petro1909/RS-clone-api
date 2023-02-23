@@ -9,7 +9,7 @@ export default class DbBaseRepository {
             console.log(err);
             throw new Error(err);
         }
-        return entities;
+        return entities.map((entity) => entity.dataValues);
     }
 
     async getById(id) {
@@ -19,18 +19,18 @@ export default class DbBaseRepository {
         } catch (err) {
             throw new Error(err);
         }
-        return entity;
+        return entity.dataValues;
     }
     async create(entity) {
         let createdEntity;
         try {
-            console.log(entity);
             createdEntity = await db[this.type].create(entity);
         } catch (err) {
             console.log(err);
             throw new Error(err);
         }
-        return createdEntity;
+        console.log(createdEntity);
+        return createdEntity.dataValues;
     }
 
     async update(entity) {
