@@ -44,7 +44,6 @@ export async function readFromJsonFile(folderName, fileName) {
         const file = await fs.readFile(filePath);
         return JSON.parse(file);
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
@@ -68,7 +67,6 @@ export async function addToJsonFile(folderName, fileName, data) {
             await fs.writeFile(filePath, JSON.stringify(logArr, null, "\t"));
         }
     } catch (err) {
-        console.log(err);
         await fs.appendFile(filePath, JSON.stringify(logArr, null, "\t"));
     }
 }
