@@ -13,7 +13,16 @@ export default class DbBaseRepository {
             await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
-        return entities.map((entity) => entity.dataValues);
+        if (!entities) {
+            return null;
+        }
+        return entities.map((entity) => {
+            if (entity.dataValues) {
+                return entity.dataValues;
+            } else {
+                return entity;
+            }
+        });
     }
 
     async getById(id) {
@@ -24,7 +33,11 @@ export default class DbBaseRepository {
             await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
-        return entity.dataValues;
+        if (entity.dataValues) {
+            return entity.dataValues;
+        } else {
+            return entity;
+        }
     }
     async create(entity) {
         let createdEntity;
@@ -34,7 +47,11 @@ export default class DbBaseRepository {
             await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
-        return createdEntity.dataValues;
+        if (createdEntity.dataValues) {
+            return createdEntity.dataValues;
+        } else {
+            return createdEntity;
+        }
     }
 
     async update(entity) {
