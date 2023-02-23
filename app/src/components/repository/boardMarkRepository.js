@@ -14,7 +14,7 @@ export default class BoardMarkService extends DbBaseRepository {
         return await super.getById(markId);
     }
 
-    async createBoardMark(mark) {
+    async createMark(mark) {
         return await super.create(mark);
     }
 
