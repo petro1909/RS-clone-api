@@ -15,7 +15,7 @@ export async function createFile(folderName, file, single) {
     try {
         await fs.access(folderName);
     } catch (err) {
-        await fs.mkdir(folderName);
+        await fs.mkdir(folderName, { recursive: true });
     }
     const filePath = `${folderName}/${file.name}`;
     if (single) {
@@ -36,6 +36,7 @@ export async function createFile(folderName, file, single) {
             return true;
         }
     });
+    return true;
 }
 export async function readFromJsonFile(folderName, fileName) {
     const filePath = `${folderName}/${fileName}`;
@@ -51,7 +52,7 @@ export async function addToJsonFile(folderName, fileName, data) {
     try {
         await fs.access(folderName);
     } catch (err) {
-        await fs.mkdir(folderName);
+        await fs.mkdir(folderName, { recursive: true });
     }
     const filePath = `${folderName}/${fileName}`;
     let logArr = [];
