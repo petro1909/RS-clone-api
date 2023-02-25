@@ -25,7 +25,7 @@ export default (sequelize, DataTypes) => {
             },
             role: {
                 type: DataTypes.ENUM,
-                values: ["ADMIN", "USER"],
+                values: ["SUPERADMIN", "ADMIN", "USER"],
                 allowNull: true,
             },
             profilePicture: {
