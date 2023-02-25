@@ -16,6 +16,9 @@ export default class DbBaseRepository {
         if (!entities) {
             return null;
         }
+        if (entities.length === 0) {
+            return [];
+        }
         return entities.map((entity) => {
             if (entity.dataValues) {
                 return entity.dataValues;
@@ -33,6 +36,9 @@ export default class DbBaseRepository {
             await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
         }
+        if (!entity) {
+            return null;
+        }
         if (entity.dataValues) {
             return entity.dataValues;
         } else {
@@ -46,6 +52,9 @@ export default class DbBaseRepository {
         } catch (err) {
             await this.errorLoggerService.makeLog(logLevels.ERROR, err);
             throw new Error(err);
+        }
+        if (!createdEntity) {
+            return null;
         }
         if (createdEntity.dataValues) {
             return createdEntity.dataValues;
