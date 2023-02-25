@@ -30,7 +30,7 @@ async function mapRouter() {
 mapRouter();
 
 try {
-    await db.sequelize.sync({ force: true });
+    await db.sequelize.sync({ force: false });
 } catch (err) {
     console.error(err);
 }
