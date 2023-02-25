@@ -1,5 +1,6 @@
 # RS-clone-api
 Api for Rollong Scopres School task RS-clone
+Base address for api requests - https://rs-clone-api-production-2acd.up.railway.app
 
 
 # Usage
@@ -7,7 +8,7 @@ Api for Rollong Scopres School task RS-clone
 - **[Database responses](#database-responses)**
 - **[Entities additional fields](#entities-additional-fields)**
 - **[Filter entities](#filter-entities)**
-- **Administation**
+- **Administration**
   - [Get Users](#admin-get-users)
   - [Get User by id](#admin-get-user-by-id)
   - [Create User](#admin-create-user)
@@ -132,9 +133,9 @@ All get requests that get a list of entities, supports several optional query pa
 
 Sort and order parameters can by multiple but, sort always should be same count as order.
 
-# Administation
+# Administration
 
-## Route = /administation
+## Route = /administration
 #### Admin Get users
 <details>
 
@@ -484,7 +485,7 @@ Optional:
       },
       "role": {
         "type": "enum",
-        "possible values" : ["USER", "ADMIN"],
+        "possible values" : ["USER", "ADMIN", "SUPERADMIN"],
         "required": true,
       },
       "profilePicture": {
@@ -2371,6 +2372,4 @@ Optional:
       { "message": "such task mark doesn't exist" }
     ```
 </details>
-
-# Administation
 
