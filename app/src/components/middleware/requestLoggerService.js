@@ -9,10 +9,16 @@ export class RequestLoggerService {
         if (!userAgentString) {
             return next();
         }
-        let osConfigString = userAgentString.match(/\([^)]*\)/)[0];
-        osConfigString = osConfigString.slice(1, osConfigString.length - 1);
-        const osConfigArr = osConfigString.split(";");
-        const osName = osConfigArr[0];
+        let osConfig = userAgentString.match(/\([^)]*\)/);
+        let osName;
+        if (!osConfig) {
+            osName = "other";
+        } else {
+            let osConfigString = osConfig[0];
+            osConfigString = osConfigString.slice(1, osConfigString.length - 1);
+            const osConfigArr = osConfigString.split(";");
+            osName = osConfigArr[0];
+        }
 
         const reqBrowser = this.getBrowser(userAgentString);
         const method = req.method;
