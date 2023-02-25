@@ -71,9 +71,6 @@ export default class UserController {
     }
 
     async registerUser(req, res) {
-        console.log(req);
-        console.log(req.body);
-        console.log(req.body.email);
         const name = req.body.name;
         const email = req.body.email;
         if (!email) {
