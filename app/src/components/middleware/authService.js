@@ -22,13 +22,14 @@ export async function verifyUser(req, res, next) {
     return next();
 }
 
-export function verifyRequiredRole(requiredRole) {
+export function verifyRequiredRole(requiredRoles) {
     return (req, res, next) => {
-        if (req.user.role !== requiredRole) {
-            return res.status(403).send("action not allowed");
-        } else {
-            return next();
-        }
+        requiredRoles.forEach((requiredRole) => {
+            if (req.user.role !== requiredRole) {
+                return res.status(403).send("action not allowed");
+            }
+        });
+        return next();
     };
 }
 
