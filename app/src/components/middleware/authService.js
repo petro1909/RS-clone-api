@@ -22,9 +22,10 @@ export async function verifyUser(req, res, next) {
     return next();
 }
 
-export function verifyRequiredRole(requiredRole) {
+export function verifyRequiredRole(requiredRoles) {
     return (req, res, next) => {
-        if (req.user.role !== requiredRole) {
+        const requiredRoleResult = requiredRoles.filter((role) => role === req.user.role);
+        if (requiredRoleResult.length === 0) {
             return res.status(403).send("action not allowed");
         } else {
             return next();

@@ -33,6 +33,18 @@ export default class AdminController {
         if (!id) {
             return sendJsonHttpResponse(res, 400, "Id didn't sent");
         }
+        const currUser = req.user;
+        if (currUser.id === id) {
+            return sendJsonHttpResponse(res, 400, "Can't delete current user");
+        }
+        try {
+            const findedUser = await this.userRepository.getUser(id);
+            if (findedUser.role === "SUPERADMIN") {
+                return sendJsonHttpResponse(res, 400, "Can't delete superadmin");
+            }
+        } catch (err) {
+            return sendJsonHttpResponse(res, 500, "Database error");
+        }
         let isDeleted;
         try {
             isDeleted = await this.userRepository.deleteUser(id);
