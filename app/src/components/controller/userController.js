@@ -102,6 +102,15 @@ export default class UserController {
         if (userId !== currentUserId && req.user.role === "USER") {
             return sendJsonHttpResponse(res, 400, "Can't update another user");
         }
+        let findedUser;
+        try {
+            findedUser = await this.userRepository.getUser(userId);
+            if (findedUser.role === "SUPERADMIN") {
+                return sendJsonHttpResponse(res, 400, "Can't update superadmin");
+            }
+        } catch (err) {
+            return sendJsonHttpResponse(res, 500, "Database error");
+        }
         const user = req.body;
         let updatedUser;
         try {
