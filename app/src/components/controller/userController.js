@@ -99,7 +99,7 @@ export default class UserController {
         if (!userId) {
             return sendJsonHttpResponse(res, 400, "Id didn't sent");
         }
-        if (userId !== currentUserId) {
+        if (userId !== currentUserId && req.user.role === "USER") {
             return sendJsonHttpResponse(res, 400, "Can't update another user");
         }
         const user = req.body;
