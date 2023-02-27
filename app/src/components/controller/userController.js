@@ -95,8 +95,12 @@ export default class UserController {
 
     async updateUser(req, res) {
         const userId = req.body.id;
+        const currentUserId = req.user.id;
         if (!userId) {
             return sendJsonHttpResponse(res, 400, "Id didn't sent");
+        }
+        if (userId !== currentUserId) {
+            return sendJsonHttpResponse(res, 400, "Can't update another user");
         }
         const user = req.body;
         let updatedUser;

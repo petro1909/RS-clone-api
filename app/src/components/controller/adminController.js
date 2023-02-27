@@ -15,6 +15,15 @@ export default class AdminController {
         if (!userId) {
             return sendJsonHttpResponse(res, 400, "Id didn't sent");
         }
+        let findedUser;
+        try {
+            findedUser = await this.userRepository.getUser(userId);
+            if (findedUser.role === "SUPERADMIN") {
+                return sendJsonHttpResponse(res, 400, "Can't update superadmin");
+            }
+        } catch (err) {
+            return sendJsonHttpResponse(res, 500, "Database error");
+        }
         const user = { role: req.body.role };
         let updatedUser;
         try {
@@ -22,6 +31,7 @@ export default class AdminController {
         } catch (err) {
             return sendJsonHttpResponse(res, 500, "Database error");
         }
+
         if (!updatedUser) {
             return sendJsonHttpResponse(res, 404, "such user doesn't exist");
         }
