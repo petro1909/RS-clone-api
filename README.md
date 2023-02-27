@@ -297,6 +297,11 @@ Optional:
     ```json
       { "message": "such user doesn't exist" }
     ```
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "сan't update superadmin" }
+    ```
 </details>
 
 #### Admin delete user by id
@@ -712,6 +717,11 @@ Optional:
   **Content:** 
     ```json
       { "message": "such user doesn't exist" }
+    ```
+  * **Code:** 400
+  **Content:** 
+    ```json
+      { "message": "сan't update another use" }
     ```
 </details>
 
