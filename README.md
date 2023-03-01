@@ -1,5 +1,5 @@
 # RS-clone-api
-Api for Rollong Scopres School task RS-clone
+Api for Rolling Scopres School task RS-clone
 Base address for api requests - https://rs-clone-api-production-2acd.up.railway.app
 
 
