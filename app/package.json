@@ -1,0 +1,42 @@
+{
+  "name": "rs-clone-api",
+  "version": "1.0.0",
+  "description": "rest api for rs-clone app",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon ./src/app.js",
+    "lint_fix": "eslint --fix --ext .js ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petro1909/RS-clone-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/petro1909/RS-clone-api/issues"
+  },
+  "homepage": "https://github.com/petro1909/RS-clone-api#readme",
+  "dependencies": {
+    "@types/node": "^18.11.18",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "jsonwebtoken": "^9.0.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.1",
+    "nodemon": "^2.0.20",
+    "pg": "^8.9.0",
+    "sequelize": "^6.28.0",
+    "typescript": "^4.9.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.0"
+  }
+}
